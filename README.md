@@ -14,7 +14,7 @@ It supports:
   - `/zh-CN/`
   - `/en-US/`
 - Static prerendered HTML for search engine crawling
-- Vercel deployment for `product.flyfish.group`
+- Cloudflare Pages deployment for `product.flyfish.group` and `office.flyfish.dev`
 
 ## Tech Stack
 
@@ -22,7 +22,7 @@ It supports:
 - Vite
 - Lucide React icons
 - Static SEO prerender script
-- Vercel hosting
+- Cloudflare Pages hosting
 
 ## Development
 
@@ -48,9 +48,29 @@ The production build generates normal Vite assets and prerendered SEO pages unde
 
 ## Deployment
 
-The site is deployed through Vercel. The production domain is:
+The site is deployed through Cloudflare Pages. Production domains:
 
-https://product.flyfish.group
+- https://product.flyfish.group
+- https://office.flyfish.dev
+
+Build and deploy manually:
+
+```bash
+npm run build
+npx wrangler pages deploy dist --project-name office-product-site --branch main
+```
+
+Cloudflare Pages reads the static routing and security headers from:
+
+- `public/_redirects`
+- `public/_headers`
+
+Custom domains should point to the Pages production domain:
+
+```text
+product.flyfish.group CNAME office-product-site.pages.dev
+office.flyfish.dev    CNAME office-product-site.pages.dev
+```
 
 ## Notes
 
