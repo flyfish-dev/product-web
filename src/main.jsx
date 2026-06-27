@@ -43,8 +43,10 @@ const shopLinks = {
   allFormatSource: shopDetailUrl('1004'),
   docSource: shopDetailUrl('2'),
   docxSource: shopDetailUrl('1003'),
+  docxCanvasSource: shopDetailUrl('1010'),
   pptSource: shopDetailUrl('1002'),
-  pptxSource: shopDetailUrl('1')
+  pptxSource: shopDetailUrl('1'),
+  excelSource: shopUrl + '#contact'
 };
 const demoUrl = 'https://demo.flyfish.group';
 const supportEmail = 'wybaby168@gmail.com';
@@ -78,6 +80,12 @@ const pipelineIcons = [
   Sparkles
 ];
 
+const partnerIcons = [
+  ShieldCheck,
+  MonitorCheck,
+  BadgeCheck
+];
+
 const showcaseImages = [
   '/assets/preview-word.png',
   '/assets/preview-slides.png',
@@ -97,10 +105,12 @@ const sourceTierMeta = {
 };
 
 const sourceLinkMeta = {
-  DOC: { url: shopLinks.docSource, icon: FileText },
-  DOCX: { url: shopLinks.docxSource, icon: BookOpenText },
-  PPT: { url: shopLinks.pptSource, icon: Presentation },
-  PPTX: { url: shopLinks.pptxSource, icon: Play }
+  DOC: { url: shopLinks.docSource, icon: FileText, tone: 'word' },
+  DOCX: { url: shopLinks.docxSource, icon: BookOpenText, tone: 'word' },
+  'DOCX-CANVAS': { url: shopLinks.docxCanvasSource, icon: Layers3, tone: 'word' },
+  PPT: { url: shopLinks.pptSource, icon: Presentation, tone: 'powerpoint' },
+  PPTX: { url: shopLinks.pptxSource, icon: Play, tone: 'powerpoint' },
+  EXCEL: { url: shopLinks.excelSource, icon: FileSpreadsheet, tone: 'excel' }
 };
 
 function getLocaleFromPathname(pathname) {
@@ -309,6 +319,7 @@ function App() {
       <Hero content={content} locale={locale} onLocaleChange={handleLocaleChange} />
       <main>
         <FormatStrip content={content} />
+        <Partners content={content} />
         <Showcase content={content} />
         <Strengths content={content} />
         <Architecture content={content} />
@@ -329,8 +340,7 @@ function Hero({ content, locale, onLocaleChange }) {
       <div className="hero-overlay" />
       <header className="nav">
         <a className="brand" href="#top" aria-label={nav.homeLabel}>
-          <span className="brand-mark"><FileText size={20} aria-hidden="true" /></span>
-          <span>Flyfish Office Preview</span>
+          <img className="brand-logo" src="/assets/office-preview-logo-light.webp" alt="Office Preview" />
         </a>
         <nav className="nav-links" aria-label={nav.ariaLabel}>
           {nav.links.map((item) => (
@@ -405,6 +415,48 @@ function FormatStrip({ content }) {
               <strong>{item.label}</strong>
               <span>{item.title}</span>
             </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Partners({ content }) {
+  const { partners } = content;
+
+  if (!partners?.items?.length) {
+    return null;
+  }
+
+  return (
+    <section className="partners section" id="partners">
+      <div className="section-inner partners-layout">
+        <div className="section-heading left">
+          <p className="eyebrow dark">{partners.eyebrow}</p>
+          <h2>{partners.title}</h2>
+          <p>{partners.copy}</p>
+        </div>
+        <div className="partner-grid">
+          {partners.items.map((item, index) => {
+            const PartnerIcon = partnerIcons[index] || BadgeCheck;
+
+            return (
+              <article className={`partner-card${item.featured ? ' featured' : ''}`} key={item.name}>
+                <div className="partner-topline">
+                  <div className={`partner-logo partner-logo-${item.logoShape || 'wide'}`}>
+                    <img src={item.logo} alt={item.logoAlt} loading="lazy" />
+                  </div>
+                  <span>{item.badge}</span>
+                </div>
+                <h3>{item.name}</h3>
+                <p>{item.description}</p>
+                <div className="partner-proof">
+                  <PartnerIcon size={17} aria-hidden="true" />
+                  <strong>{item.proof}</strong>
+                </div>
+              </article>
             );
           })}
         </div>
@@ -632,15 +684,17 @@ function Pricing({ content }) {
                     ))}
                   </ul>
                   {tier.links ? (
-                    <div className="pricing-link-list" aria-label={`${tier.name} ${pricing.source.singleLinksAriaSuffix}`}>
+                    <div className="pricing-format-grid" aria-label={[tier.name, pricing.source.singleLinksAriaSuffix].join(' ')}>
                       {tier.links.map((link) => {
                         const LinkIcon = link.icon;
 
                         return (
-                          <a className="pricing-mini-link" href={link.url} target="_blank" rel="noreferrer" key={link.code}>
-                            <LinkIcon size={18} aria-hidden="true" />
-                            <span>
-                              <strong>{link.code}</strong>
+                          <a className={'pricing-format-link tone-' + link.tone} href={link.url} target="_blank" rel="noreferrer" key={link.code}>
+                            <span className="pricing-format-icon">
+                              <LinkIcon size={12} aria-hidden="true" />
+                            </span>
+                            <span className="pricing-format-copy">
+                              <strong>{link.displayCode || link.code}</strong>
                               <small>{link.label}</small>
                             </span>
                           </a>

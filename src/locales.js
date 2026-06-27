@@ -22,6 +22,7 @@ export const locales = {
       buy: '购买',
       links: [
         { href: '#formats', label: '格式' },
+        { href: '#partners', label: '客户' },
         { href: '#showcase', label: '体验' },
         { href: '#architecture', label: '方案' },
         { href: '#pricing', label: '定价' },
@@ -49,6 +50,41 @@ export const locales = {
         { label: 'PPTX', title: '现代演示' },
         { label: 'XLS', title: '传统表格' },
         { label: 'XLSX', title: '标准表格' }
+      ]
+    },
+    partners: {
+      eyebrow: '客户背书',
+      title: '真实客户采购与场景验证，证明 Office Preview 可以进入业务现场。',
+      copy: '产品能力持续在通信、教育与产业互联网场景中验证。以下代表客户与合作伙伴用于公开展示和采购参考，帮助评估团队更直观看到实际落地基础。',
+      items: [
+        {
+          name: '中国移动通信集团广东有限公司湛江分公司技术科室',
+          badge: '企业版已购客户',
+          description: '面向通信业务文档、内部系统附件和项目材料预览场景，采用企业版能力并进入交付支持流程。',
+          proof: '企业版采购 / 技术科室场景',
+          logo: '/assets/partners/china-mobile.svg',
+          logoAlt: '中国移动',
+          logoShape: 'wide',
+          featured: true
+        },
+        {
+          name: '山西大学',
+          badge: '教育科研场景',
+          description: '面向高校资料流转、文档阅读和系统集成场景，提供稳定的多格式预览能力支撑。',
+          proof: '高校客户 / 文档预览场景',
+          logo: '/assets/partners/shanxi-university.jpg',
+          logoAlt: '山西大学校徽',
+          logoShape: 'seal'
+        },
+        {
+          name: '联通（山西）产业互联网有限公司',
+          badge: '产业互联网场景',
+          description: '面向政企数字化、行业系统集成与内网文档预览需求，提供可交付的 Office 预览方案。',
+          proof: '政企集成 / 产业互联网场景',
+          logo: '/assets/partners/china-unicom.svg',
+          logoAlt: '中国联通',
+          logoShape: 'wide'
+        }
       ]
     },
     showcase: {
@@ -170,14 +206,16 @@ export const locales = {
             name: '单格式研究版',
             price: '99',
             badge: '单格式源码 / 研究',
-            copy: '适合只关注某一种 Office 格式的源码学习与技术研究。',
-            points: ['任选一种格式源码', '用于学习研究', '不含商用授权'],
+            copy: '适合聚焦某一种 Office 格式的源码学习、技术验证与专项研究。',
+            points: ['六种研究方向可选', '用于学习研究', '不含商用授权'],
             cta: '选择源码',
             links: [
-              { code: 'DOC', label: '传统文档' },
-              { code: 'DOCX', label: '标准文档' },
+              { code: 'DOC', label: '传统 Word' },
+              { code: 'DOCX', label: '标准 Word' },
+              { code: 'DOCX-CANVAS', displayCode: 'CANVAS', label: 'DOCX 渲染' },
               { code: 'PPT', label: '经典演示' },
-              { code: 'PPTX', label: '现代演示' }
+              { code: 'PPTX', label: '现代演示' },
+              { code: 'EXCEL', label: 'XLS / XLSX' }
             ]
           },
           {
@@ -253,6 +291,7 @@ export const locales = {
       buy: 'Buy',
       links: [
         { href: '#formats', label: 'Formats' },
+        { href: '#partners', label: 'Customers' },
         { href: '#showcase', label: 'Preview' },
         { href: '#architecture', label: 'Solution' },
         { href: '#pricing', label: 'Pricing' },
@@ -280,6 +319,41 @@ export const locales = {
         { label: 'PPTX', title: 'Modern slides' },
         { label: 'XLS', title: 'Legacy spreadsheets' },
         { label: 'XLSX', title: 'Modern spreadsheets' }
+      ]
+    },
+    partners: {
+      eyebrow: 'Customer Proof',
+      title: 'Real customer adoption and field validation for Office Preview.',
+      copy: 'Flyfish Office Preview is validated across telecom, education, and industrial internet scenarios. These representative customers and partners are shown publicly for evaluation and procurement reference.',
+      items: [
+        {
+          name: 'China Mobile Guangdong Zhanjiang Branch Technology Office',
+          badge: 'Enterprise customer',
+          description: 'Enterprise edition adoption for telecom business documents, internal attachments, and project material preview workflows.',
+          proof: 'Enterprise purchase / technology office scenario',
+          logo: '/assets/partners/china-mobile.svg',
+          logoAlt: 'China Mobile',
+          logoShape: 'wide',
+          featured: true
+        },
+        {
+          name: 'Shanxi University',
+          badge: 'Education scenario',
+          description: 'Stable multi-format preview support for university document circulation, online reading, and system integration scenarios.',
+          proof: 'University customer / document preview scenario',
+          logo: '/assets/partners/shanxi-university.jpg',
+          logoAlt: 'Shanxi University emblem',
+          logoShape: 'seal'
+        },
+        {
+          name: 'China Unicom Shanxi Industrial Internet Co., Ltd.',
+          badge: 'Industrial internet',
+          description: 'Deliverable Office preview capabilities for government-enterprise digitization, system integration, and intranet document workflows.',
+          proof: 'Enterprise integration / industrial internet scenario',
+          logo: '/assets/partners/china-unicom.svg',
+          logoAlt: 'China Unicom',
+          logoShape: 'wide'
+        }
       ]
     },
     showcase: {
@@ -401,14 +475,16 @@ export const locales = {
             name: 'Single Format Research',
             price: '99',
             badge: 'Single Format / Research',
-            copy: 'For developers who want to study one Office format in depth.',
-            points: ['Choose one format source', 'For learning and research', 'No commercial use'],
+            copy: 'For developers who want to study a focused Office format renderer in depth.',
+            points: ['Six research tracks available', 'For learning and research', 'No commercial use'],
             cta: 'Choose Source',
             links: [
-              { code: 'DOC', label: 'Legacy docs' },
-              { code: 'DOCX', label: 'Modern docs' },
+              { code: 'DOC', label: 'Legacy Word' },
+              { code: 'DOCX', label: 'Modern Word' },
+              { code: 'DOCX-CANVAS', displayCode: 'CANVAS', label: 'DOCX render' },
               { code: 'PPT', label: 'Legacy slides' },
-              { code: 'PPTX', label: 'Modern slides' }
+              { code: 'PPTX', label: 'Modern slides' },
+              { code: 'EXCEL', label: 'XLS / XLSX' }
             ]
           },
           {

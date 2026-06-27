@@ -16,8 +16,10 @@ const shopLinks = {
   allFormatSource: shopDetailUrl('1004'),
   docSource: shopDetailUrl('2'),
   docxSource: shopDetailUrl('1003'),
+  docxCanvasSource: shopDetailUrl('1010'),
   pptSource: shopDetailUrl('1002'),
-  pptxSource: shopDetailUrl('1')
+  pptxSource: shopDetailUrl('1'),
+  excelSource: shopUrl + '#contact'
 };
 const deploymentUrls = {
   deployment: shopLinks.fullDeployment,
@@ -27,8 +29,18 @@ const sourceUrls = {
   developer: shopLinks.allFormatSource,
   DOC: shopLinks.docSource,
   DOCX: shopLinks.docxSource,
+  'DOCX-CANVAS': shopLinks.docxCanvasSource,
   PPT: shopLinks.pptSource,
-  PPTX: shopLinks.pptxSource
+  PPTX: shopLinks.pptxSource,
+  EXCEL: shopLinks.excelSource
+};
+const sourceTones = {
+  DOC: 'word',
+  DOCX: 'word',
+  'DOCX-CANVAS': 'word',
+  PPT: 'powerpoint',
+  PPTX: 'powerpoint',
+  EXCEL: 'excel'
 };
 const showcaseImages = [
   '/assets/preview-word.png',
@@ -64,8 +76,7 @@ function renderStaticContent(locale) {
         <div class="hero-overlay"></div>
         <header class="nav">
           <a class="brand" href="#top" aria-label="${escapeHtml(content.nav.homeLabel)}">
-            <span class="brand-mark" aria-hidden="true">F</span>
-            <span>Flyfish Office Preview</span>
+            <img class="brand-logo" src="/assets/office-preview-logo-light.webp" alt="Office Preview" />
           </a>
           <nav class="nav-links" aria-label="${escapeHtml(content.nav.ariaLabel)}">
             ${content.nav.links.map((item) => `<a href="${escapeHtml(item.href)}">${escapeHtml(item.label)}</a>`).join('')}
@@ -103,6 +114,33 @@ function renderStaticContent(locale) {
                 <article class="format-card">
                   <strong>${escapeHtml(item.label)}</strong>
                   <span>${escapeHtml(item.title)}</span>
+                </article>
+              `).join('')}
+            </div>
+          </div>
+        </section>
+
+        <section class="partners section" id="partners">
+          <div class="section-inner partners-layout">
+            <div class="section-heading left">
+              <p class="eyebrow dark">${escapeHtml(content.partners.eyebrow)}</p>
+              <h2>${escapeHtml(content.partners.title)}</h2>
+              <p>${escapeHtml(content.partners.copy)}</p>
+            </div>
+            <div class="partner-grid">
+              ${content.partners.items.map((item) => `
+                <article class="partner-card${item.featured ? ' featured' : ''}">
+                  <div class="partner-topline">
+                    <div class="partner-logo partner-logo-${escapeHtml(item.logoShape || 'wide')}">
+                      <img src="${escapeHtml(item.logo)}" alt="${escapeHtml(item.logoAlt)}" />
+                    </div>
+                    <span>${escapeHtml(item.badge)}</span>
+                  </div>
+                  <h3>${escapeHtml(item.name)}</h3>
+                  <p>${escapeHtml(item.description)}</p>
+                  <div class="partner-proof">
+                    <strong>${escapeHtml(item.proof)}</strong>
+                  </div>
                 </article>
               `).join('')}
             </div>
@@ -231,8 +269,8 @@ function renderStaticContent(locale) {
                       </div>
                       ${renderList(tier.points)}
                       ${tier.links ? `
-                        <div class="pricing-link-list" aria-label="${escapeHtml(`${tier.name} ${content.pricing.source.singleLinksAriaSuffix}`)}">
-                          ${tier.links.map((link) => `<a class="pricing-mini-link" href="${sourceUrls[link.code]}"><strong>${escapeHtml(link.code)}</strong><small>${escapeHtml(link.label)}</small></a>`).join('')}
+                        <div class="pricing-format-grid" aria-label="${escapeHtml(tier.name + ' ' + content.pricing.source.singleLinksAriaSuffix)}">
+                          ${tier.links.map((link) => '<a class="pricing-format-link tone-' + (sourceTones[link.code] || 'word') + '" href="' + (sourceUrls[link.code] || shopUrl) + '"><span class="pricing-format-copy"><strong>' + escapeHtml(link.displayCode || link.code) + '</strong><small>' + escapeHtml(link.label) + '</small></span></a>').join('')}
                         </div>
                       ` : `<a class="button pricing-button" href="${tier.key === 'developer' ? sourceUrls.developer : '#contact'}">${escapeHtml(tier.cta)}</a>`}
                     </article>
