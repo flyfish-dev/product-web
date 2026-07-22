@@ -1,3 +1,5 @@
+import { OFFICE_PRICING } from './shopCatalog.js';
+
 export const DEFAULT_LOCALE = 'en-US';
 
 export const LANGUAGE_STORAGE_KEY = 'flyfish-office-preview-locale';
@@ -169,7 +171,13 @@ export const locales = {
     pricing: {
       eyebrow: '定价与授权',
       title: '部署服务和源码授权，分开选择。',
-      copy: '只想快速上线，选择 ¥129 部署方案；需要在商业项目中使用源码，选择 ¥1499 商业版。',
+      copy: `只想快速上线，选择 ¥${OFFICE_PRICING.deployment.cny} 部署方案；需要在商业项目中使用源码，选择 ¥${OFFICE_PRICING.commercial.cny} 商业版。`,
+      currencySymbol: '¥',
+      currencyCode: 'CNY',
+      checkout: {
+        title: '人民币定价',
+        body: '中文站显示 CNY，商品价格与 Flyfish 商店保持一致。'
+      },
       deployment: {
         label: '快速部署',
         title: '不需要先研究源码，也可以快速上线。',
@@ -178,7 +186,7 @@ export const locales = {
           {
             key: 'deployment',
             name: '部署方案',
-            price: '129',
+            price: OFFICE_PRICING.deployment.cny,
             badge: '推荐部署',
             copy: '适合希望快速上线的客户，部署全套预览能力，并定制一次到您的网站。',
             points: ['部署全套 Office 预览能力', '定制一次到您的网站', '域名与访问环境协助', '基础售后与部署陪跑'],
@@ -204,7 +212,8 @@ export const locales = {
           {
             key: 'single',
             name: '单格式研究版',
-            price: '99',
+            price: OFFICE_PRICING.singleResearch.cny,
+            priceSuffix: '起',
             badge: '单格式源码 / 研究',
             copy: '适合聚焦某一种 Office 格式的源码学习、技术验证与专项研究。',
             points: ['六种研究方向可选', '用于学习研究', '不含商用授权'],
@@ -221,7 +230,7 @@ export const locales = {
           {
             key: 'developer',
             name: '开发版',
-            price: '599',
+            price: OFFICE_PRICING.developer.cny,
             badge: '完整源码 / 非商业',
             copy: '适合个人开发者、单项目验证和学习研究，帮助团队先跑通完整预览链路。',
             points: ['交付完整源码', '基础集成文档', '30 天基础答疑', '学习研究与非商业验证'],
@@ -230,20 +239,20 @@ export const locales = {
           {
             key: 'commercial',
             name: '商业版',
-            price: '1499',
+            price: OFFICE_PRICING.commercial.cny,
             badge: '商用授权',
             copy: '适合 SaaS、OA、知识库、低代码平台和中小企业系统，面向真实项目上线。',
             points: ['交付完整源码', '包含商用授权', '部署指引与集成支持', '1 年版本更新'],
-            cta: '联系开通商业版'
+            cta: '购买商业版'
           },
           {
             key: 'enterprise',
             name: '企业源码版',
-            price: '4999',
+            price: OFFICE_PRICING.enterprise.cny,
             badge: '企业级源码授权',
             copy: '适合政企、集团、私有化交付商和 ISV，覆盖更深的私有化与交付支持。',
             points: ['交付完整源码', '企业级源码授权', '私有化部署联调', '1 年优先维护与适配建议'],
-            cta: '联系开通企业版'
+            cta: '购买企业版'
           }
         ]
       },
@@ -438,7 +447,13 @@ export const locales = {
     pricing: {
       eyebrow: 'Pricing & Licensing',
       title: 'Choose deployment service and source license separately.',
-      copy: 'Choose the ¥129 deployment plan for quick launch, or the ¥1499 commercial license when source code is used in a commercial project.',
+      copy: `Launch with the $${OFFICE_PRICING.deployment.usd} deployment service, or choose the $${OFFICE_PRICING.commercial.usd} Commercial license for production source-code use.`,
+      currencySymbol: '$',
+      currencyCode: 'USD',
+      checkout: {
+        title: 'USD pricing',
+        body: 'Prices match Flyfish Shop. Secure international checkout is available with Stripe.'
+      },
       deployment: {
         label: 'Quick Deployment',
         title: 'Launch quickly without studying the source code first.',
@@ -447,7 +462,7 @@ export const locales = {
           {
             key: 'deployment',
             name: 'Deployment Plan',
-            price: '129',
+            price: OFFICE_PRICING.deployment.usd,
             badge: 'Recommended',
             copy: 'A practical package for fast launch, including full Office preview deployment and one customization to your website.',
             points: ['Deploy the complete Office preview suite', 'One customization to your website', 'Domain and environment assistance', 'Basic support and deployment guidance'],
@@ -473,7 +488,8 @@ export const locales = {
           {
             key: 'single',
             name: 'Single Format Research',
-            price: '99',
+            price: OFFICE_PRICING.singleResearch.usd,
+            pricePrefix: 'From',
             badge: 'Single Format / Research',
             copy: 'For developers who want to study a focused Office format renderer in depth.',
             points: ['Six research tracks available', 'For learning and research', 'No commercial use'],
@@ -490,7 +506,7 @@ export const locales = {
           {
             key: 'developer',
             name: 'Developer',
-            price: '599',
+            price: OFFICE_PRICING.developer.usd,
             badge: 'Full Source / Non-commercial',
             copy: 'For individual developers, project validation, and non-commercial research before full product integration.',
             points: ['Full source delivery', 'Basic integration documentation', '30 days of basic Q&A', 'Learning and non-commercial validation'],
@@ -499,26 +515,26 @@ export const locales = {
           {
             key: 'commercial',
             name: 'Commercial',
-            price: '1499',
+            price: OFFICE_PRICING.commercial.usd,
             badge: 'Commercial License',
             copy: 'For SaaS products, OA systems, knowledge bases, low-code platforms, and SMB business systems going live.',
             points: ['Full source delivery', 'Commercial usage rights', 'Deployment and integration guidance', '1 year of version updates'],
-            cta: 'Contact for Commercial'
+            cta: 'Buy Commercial'
           },
           {
             key: 'enterprise',
             name: 'Enterprise Source',
-            price: '4999',
+            price: OFFICE_PRICING.enterprise.usd,
             badge: 'Enterprise Source License',
             copy: 'For government, enterprise groups, private-delivery vendors, and ISVs with deeper delivery requirements.',
             points: ['Full source delivery', 'Enterprise source license', 'Private deployment joint debugging', '1 year of priority maintenance advice'],
-            cta: 'Contact for Enterprise'
+            cta: 'Buy Enterprise'
           }
         ]
       },
       policy: {
         title: 'License note:',
-        body: 'Free local evaluation, the ¥99 single-format research source, and the ¥599 developer version are limited to research, evaluation, learning, and non-commercial validation. Source code may not be used in any commercial activity unless the commercial or enterprise source license has been purchased.'
+        body: `Free local evaluation, the $${OFFICE_PRICING.singleResearch.usd}+ single-format research source, and the $${OFFICE_PRICING.developer.usd} Developer edition are limited to research, evaluation, learning, and non-commercial validation. Source code may not be used commercially unless the Commercial or Enterprise Source license has been purchased.`
       }
     },
     contactModal: {

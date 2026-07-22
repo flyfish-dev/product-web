@@ -34,20 +34,11 @@ import {
   LANGUAGE_STORAGE_KEY,
   getLocaleConfig
 } from './locales';
+import { SHOP_LINKS, SHOP_URL } from './shopCatalog';
 import './styles.css';
 
-const shopUrl = 'https://dev.flyfish.group/shop/item-list';
-const shopDetailUrl = (id) => `https://dev.flyfish.group/shop/detail/${id}`;
-const shopLinks = {
-  fullDeployment: shopDetailUrl('1005'),
-  allFormatSource: shopDetailUrl('1004'),
-  docSource: shopDetailUrl('2'),
-  docxSource: shopDetailUrl('1003'),
-  docxCanvasSource: shopDetailUrl('1010'),
-  pptSource: shopDetailUrl('1002'),
-  pptxSource: shopDetailUrl('1'),
-  excelSource: shopUrl + '#contact'
-};
+const shopUrl = SHOP_URL;
+const shopLinks = SHOP_LINKS;
 const demoUrl = 'https://demo.flyfish.group';
 const supportEmail = 'wybaby168@gmail.com';
 const supportWechat = 'Yous_Gift';
@@ -100,8 +91,8 @@ const deploymentPlanMeta = {
 const sourceTierMeta = {
   single: {},
   developer: { url: shopLinks.allFormatSource },
-  commercial: { featured: true, contact: true },
-  enterprise: { contact: true }
+  commercial: { featured: true, url: shopLinks.commercialSource },
+  enterprise: { url: shopLinks.enterpriseSource }
 };
 
 const sourceLinkMeta = {
@@ -388,11 +379,14 @@ function Hero({ content }) {
 
   return (
     <section className="hero" id="top">
-      <img className="hero-media" src="/assets/office-hero-banner.png" alt={hero.imageAlt} fetchPriority="high" />
+      <img className="hero-media" src="/assets/office-hero-banner.png" alt={hero.imageAlt} fetchpriority="high" />
       <div className="hero-overlay" aria-hidden="true" />
       <div className="hero-aura" aria-hidden="true" />
       <div className="hero-content">
-        <p className="eyebrow hero-eyebrow"><span aria-hidden="true" />{hero.eyebrow}</p>
+        <p className="eyebrow hero-eyebrow">
+          <ShieldCheck size={16} strokeWidth={1.8} aria-hidden="true" />
+          {hero.eyebrow}
+        </p>
         <h1>{hero.title}</h1>
         <p className="hero-copy">{hero.copy}</p>
         <div className="hero-actions">
@@ -407,7 +401,10 @@ function Hero({ content }) {
         </div>
         <div className="hero-metrics" aria-label={hero.metricsAria}>
           {hero.metrics.map((item) => (
-            <span key={item}>{item}</span>
+            <span key={item}>
+              <CheckCircle2 size={15} strokeWidth={1.8} aria-hidden="true" />
+              {item}
+            </span>
           ))}
         </div>
       </div>
@@ -612,7 +609,6 @@ function ScenarioBand({ content }) {
 }
 
 function Pricing({ content }) {
-  const [contactPlan, setContactPlan] = useState(null);
   const { pricing } = content;
   const deploymentPlans = pricing.deployment.plans.map((plan) => ({
     ...plan,
@@ -634,6 +630,13 @@ function Pricing({ content }) {
           <p className="eyebrow dark">{pricing.eyebrow}</p>
           <h2>{pricing.title}</h2>
           <p>{pricing.copy}</p>
+          <div className="pricing-trust">
+            <LockKeyhole size={18} strokeWidth={1.8} aria-hidden="true" />
+            <span>
+              <strong>{pricing.checkout.title}</strong>
+              <small>{pricing.checkout.body}</small>
+            </span>
+          </div>
         </div>
 
         <div className="pricing-groups">
@@ -654,8 +657,10 @@ function Pricing({ content }) {
                         <strong>{plan.price}</strong>
                       ) : (
                         <>
-                          <small>¥</small>
+                          {plan.pricePrefix ? <span className="price-qualifier">{plan.pricePrefix}</span> : null}
+                          <small aria-hidden="true">{pricing.currencySymbol}</small>
                           <strong>{plan.price}</strong>
+                          {plan.priceSuffix ? <span className="price-qualifier suffix">{plan.priceSuffix}</span> : null}
                         </>
                       )}
                     </div>
@@ -691,8 +696,10 @@ function Pricing({ content }) {
                     <span className="pricing-kicker">{tier.badge}</span>
                     <h4>{tier.name}</h4>
                     <div className="price-line">
-                      <small>¥</small>
+                      {tier.pricePrefix ? <span className="price-qualifier">{tier.pricePrefix}</span> : null}
+                      <small aria-hidden="true">{pricing.currencySymbol}</small>
                       <strong>{tier.price}</strong>
+                      {tier.priceSuffix ? <span className="price-qualifier suffix">{tier.priceSuffix}</span> : null}
                     </div>
                     <p>{tier.copy}</p>
                   </div>
@@ -722,11 +729,6 @@ function Pricing({ content }) {
                         );
                       })}
                     </div>
-                  ) : tier.contact ? (
-                    <button className="button pricing-button" type="button" onClick={() => setContactPlan(tier.name)}>
-                      <MessageCircle size={18} aria-hidden="true" />
-                      {tier.cta}
-                    </button>
                   ) : (
                     <a className="button pricing-button" href={tier.url} target="_blank" rel="noreferrer">
                       <ShoppingCart size={18} aria-hidden="true" />
@@ -748,7 +750,6 @@ function Pricing({ content }) {
           </span>
         </div>
       </div>
-      {contactPlan ? <ContactModal content={content} planName={contactPlan} onClose={() => setContactPlan(null)} /> : null}
     </section>
   );
 }

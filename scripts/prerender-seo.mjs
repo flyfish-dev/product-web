@@ -2,31 +2,24 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DEFAULT_LOCALE, LANGUAGE_OPTIONS, locales } from '../src/locales.js';
+import { SHOP_LINKS, SHOP_URL } from '../src/shopCatalog.js';
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = path.join(rootDir, 'dist');
 const siteUrl = 'https://product.flyfish.group';
-const shopUrl = 'https://dev.flyfish.group/shop/item-list';
+const shopUrl = SHOP_URL;
 const demoUrl = 'https://demo.flyfish.group';
 const supportEmail = 'wybaby168@gmail.com';
 const supportWechat = 'Yous_Gift';
-const shopDetailUrl = (id) => `https://dev.flyfish.group/shop/detail/${id}`;
-const shopLinks = {
-  fullDeployment: shopDetailUrl('1005'),
-  allFormatSource: shopDetailUrl('1004'),
-  docSource: shopDetailUrl('2'),
-  docxSource: shopDetailUrl('1003'),
-  docxCanvasSource: shopDetailUrl('1010'),
-  pptSource: shopDetailUrl('1002'),
-  pptxSource: shopDetailUrl('1'),
-  excelSource: shopUrl + '#contact'
-};
+const shopLinks = SHOP_LINKS;
 const deploymentUrls = {
   deployment: shopLinks.fullDeployment,
   local: demoUrl
 };
 const sourceUrls = {
   developer: shopLinks.allFormatSource,
+  commercial: shopLinks.commercialSource,
+  enterprise: shopLinks.enterpriseSource,
   DOC: shopLinks.docSource,
   DOCX: shopLinks.docxSource,
   'DOCX-CANVAS': shopLinks.docxCanvasSource,
@@ -61,8 +54,16 @@ function renderList(items) {
   return `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
 }
 
-function renderPrice(price) {
-  return price === '免费' || price === 'Free' ? escapeHtml(price) : `¥${escapeHtml(price)}`;
+function renderPrice(item, pricing) {
+  if (item.key === 'local') {
+    return escapeHtml(item.price);
+  }
+
+  return [
+    item.pricePrefix,
+    `${pricing.currencySymbol}${item.price}`,
+    item.priceSuffix
+  ].filter(Boolean).map(escapeHtml).join(' ');
 }
 
 function renderStaticContent(locale) {
@@ -71,25 +72,25 @@ function renderStaticContent(locale) {
 
   return `
     <div class="site seo-static" data-locale="${escapeHtml(locale)}">
+      <header class="nav">
+        <a class="brand" href="#top" aria-label="${escapeHtml(content.nav.homeLabel)}">
+          <img class="brand-logo" src="/assets/office-preview-logo-light.webp" alt="Office Preview" />
+        </a>
+        <nav class="nav-links" aria-label="${escapeHtml(content.nav.ariaLabel)}">
+          ${content.nav.links.map((item) => `<a href="${escapeHtml(item.href)}">${escapeHtml(item.label)}</a>`).join('')}
+        </nav>
+        <div class="nav-actions">
+          <div class="language-switcher" aria-label="${escapeHtml(content.languageSwitcher.ariaLabel)}">
+            ${LANGUAGE_OPTIONS.map((option) => `<a class="${option.code === locale ? 'active' : ''}" href="/${escapeHtml(option.code)}/" aria-label="${escapeHtml(option.label)}">${escapeHtml(option.shortLabel)}</a>`).join('')}
+          </div>
+          <a class="nav-buy" href="${shopUrl}"><span class="nav-buy-label">${escapeHtml(content.nav.buy)}</span></a>
+        </div>
+      </header>
       <section class="hero" id="top">
         <img class="hero-media" src="/assets/office-hero-banner.png" alt="${escapeHtml(content.hero.imageAlt)}" />
         <div class="hero-overlay"></div>
-        <header class="nav">
-          <a class="brand" href="#top" aria-label="${escapeHtml(content.nav.homeLabel)}">
-            <img class="brand-logo" src="/assets/office-preview-logo-light.webp" alt="Office Preview" />
-          </a>
-          <nav class="nav-links" aria-label="${escapeHtml(content.nav.ariaLabel)}">
-            ${content.nav.links.map((item) => `<a href="${escapeHtml(item.href)}">${escapeHtml(item.label)}</a>`).join('')}
-          </nav>
-          <div class="nav-actions">
-            <div class="language-switcher" aria-label="${escapeHtml(content.languageSwitcher.ariaLabel)}">
-              ${LANGUAGE_OPTIONS.map((option) => `<a class="${option.code === locale ? 'active' : ''}" href="/${escapeHtml(option.code)}/" aria-label="${escapeHtml(option.label)}">${escapeHtml(option.shortLabel)}</a>`).join('')}
-            </div>
-            <a class="nav-buy" href="${shopUrl}"><span class="nav-buy-label">${escapeHtml(content.nav.buy)}</span></a>
-          </div>
-        </header>
         <div class="hero-content">
-          <p class="eyebrow">${escapeHtml(content.hero.eyebrow)}</p>
+          <p class="eyebrow hero-eyebrow">${escapeHtml(content.hero.eyebrow)}</p>
           <h1>${escapeHtml(content.hero.title)}</h1>
           <p class="hero-copy">${escapeHtml(content.hero.copy)}</p>
           <div class="hero-actions">
@@ -229,6 +230,9 @@ function renderStaticContent(locale) {
               <p class="eyebrow dark">${escapeHtml(content.pricing.eyebrow)}</p>
               <h2>${escapeHtml(content.pricing.title)}</h2>
               <p>${escapeHtml(content.pricing.copy)}</p>
+              <div class="pricing-trust">
+                <span><strong>${escapeHtml(content.pricing.checkout.title)}</strong><small>${escapeHtml(content.pricing.checkout.body)}</small></span>
+              </div>
             </div>
             <div class="pricing-groups">
               <section class="pricing-group" aria-labelledby="deployment-pricing-title-static-${escapeHtml(locale)}">
@@ -243,7 +247,7 @@ function renderStaticContent(locale) {
                       <div class="pricing-card-head">
                         <span class="pricing-kicker">${escapeHtml(plan.badge)}</span>
                         <h4>${escapeHtml(plan.name)}</h4>
-                        <div class="price-line"><strong>${renderPrice(plan.price)}</strong></div>
+                        <div class="price-line"><strong>${renderPrice(plan, content.pricing)}</strong></div>
                         <p>${escapeHtml(plan.copy)}</p>
                       </div>
                       ${renderList(plan.points)}
@@ -264,7 +268,7 @@ function renderStaticContent(locale) {
                       <div class="pricing-card-head">
                         <span class="pricing-kicker">${escapeHtml(tier.badge)}</span>
                         <h4>${escapeHtml(tier.name)}</h4>
-                        <div class="price-line"><strong>${renderPrice(tier.price)}</strong></div>
+                        <div class="price-line"><strong>${renderPrice(tier, content.pricing)}</strong></div>
                         <p>${escapeHtml(tier.copy)}</p>
                       </div>
                       ${renderList(tier.points)}
@@ -272,7 +276,7 @@ function renderStaticContent(locale) {
                         <div class="pricing-format-grid" aria-label="${escapeHtml(tier.name + ' ' + content.pricing.source.singleLinksAriaSuffix)}">
                           ${tier.links.map((link) => '<a class="pricing-format-link tone-' + (sourceTones[link.code] || 'word') + '" href="' + (sourceUrls[link.code] || shopUrl) + '"><span class="pricing-format-copy"><strong>' + escapeHtml(link.displayCode || link.code) + '</strong><small>' + escapeHtml(link.label) + '</small></span></a>').join('')}
                         </div>
-                      ` : `<a class="button pricing-button" href="${tier.key === 'developer' ? sourceUrls.developer : '#contact'}">${escapeHtml(tier.cta)}</a>`}
+                      ` : `<a class="button pricing-button" href="${sourceUrls[tier.key] || shopUrl}">${escapeHtml(tier.cta)}</a>`}
                     </article>
                   `).join('')}
                 </div>
