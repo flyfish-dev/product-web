@@ -328,7 +328,8 @@ function App() {
 
   return (
     <div className="site">
-      <Hero content={content} locale={locale} onLocaleChange={handleLocaleChange} />
+      <SiteNav content={content} locale={locale} onLocaleChange={handleLocaleChange} />
+      <Hero content={content} />
       <main>
         <FormatStrip content={content} />
         <Partners content={content} />
@@ -344,46 +345,52 @@ function App() {
   );
 }
 
-function Hero({ content, locale, onLocaleChange }) {
-  const { hero, nav, languageSwitcher } = content;
+function SiteNav({ content, locale, onLocaleChange }) {
+  const { nav, languageSwitcher } = content;
+
+  return (
+    <header className="nav">
+      <a className="brand" href="#top" aria-label={nav.homeLabel}>
+        <img className="brand-logo" src="/assets/office-preview-logo-light.webp" alt="Office Preview" />
+      </a>
+      <nav className="nav-links" aria-label={nav.ariaLabel}>
+        {nav.links.map((item) => (
+          <a href={item.href} key={item.href}>{item.label}</a>
+        ))}
+      </nav>
+      <div className="nav-actions">
+        <div className="language-switcher" aria-label={languageSwitcher.ariaLabel}>
+          <Languages size={16} aria-hidden="true" />
+          {LANGUAGE_OPTIONS.map((option) => (
+            <button
+              className={locale === option.code ? 'active' : ''}
+              type="button"
+              aria-label={option.label}
+              aria-pressed={locale === option.code}
+              onClick={() => onLocaleChange(option.code)}
+              key={option.code}
+            >
+              {option.shortLabel}
+            </button>
+          ))}
+        </div>
+        <a className="nav-buy" href={shopUrl} target="_blank" rel="noreferrer">
+          <ShoppingCart size={17} aria-hidden="true" />
+          <span className="nav-buy-label">{nav.buy}</span>
+        </a>
+      </div>
+    </header>
+  );
+}
+
+function Hero({ content }) {
+  const { hero } = content;
 
   return (
     <section className="hero" id="top">
       <img className="hero-media" src="/assets/office-hero-banner.png" alt={hero.imageAlt} fetchPriority="high" />
       <div className="hero-overlay" aria-hidden="true" />
       <div className="hero-aura" aria-hidden="true" />
-      <header className="nav">
-        <a className="brand" href="#top" aria-label={nav.homeLabel}>
-          <img className="brand-logo" src="/assets/office-preview-logo-light.webp" alt="Office Preview" />
-        </a>
-        <nav className="nav-links" aria-label={nav.ariaLabel}>
-          {nav.links.map((item) => (
-            <a href={item.href} key={item.href}>{item.label}</a>
-          ))}
-        </nav>
-        <div className="nav-actions">
-          <div className="language-switcher" aria-label={languageSwitcher.ariaLabel}>
-            <Languages size={16} aria-hidden="true" />
-            {LANGUAGE_OPTIONS.map((option) => (
-              <button
-                className={locale === option.code ? 'active' : ''}
-                type="button"
-                aria-label={option.label}
-                aria-pressed={locale === option.code}
-                onClick={() => onLocaleChange(option.code)}
-                key={option.code}
-              >
-                {option.shortLabel}
-              </button>
-            ))}
-          </div>
-          <a className="nav-buy" href={shopUrl} target="_blank" rel="noreferrer">
-            <ShoppingCart size={17} aria-hidden="true" />
-            <span className="nav-buy-label">{nav.buy}</span>
-          </a>
-        </div>
-      </header>
-
       <div className="hero-content">
         <p className="eyebrow hero-eyebrow"><span aria-hidden="true" />{hero.eyebrow}</p>
         <h1>{hero.title}</h1>

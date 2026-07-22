@@ -1616,7 +1616,7 @@ button:focus-visible {
 
 .nav {
   position: fixed;
-  z-index: 60;
+  z-index: 80;
   top: 18px;
   left: 50%;
   grid-template-columns: 1fr auto 1fr;
