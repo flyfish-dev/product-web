@@ -1,10 +1,10 @@
-export const DEFAULT_LOCALE = 'zh-CN';
+export const DEFAULT_LOCALE = 'en-US';
 
 export const LANGUAGE_STORAGE_KEY = 'flyfish-office-preview-locale';
 
 export const LANGUAGE_OPTIONS = [
-  { code: 'zh-CN', shortLabel: '中', label: '中文' },
-  { code: 'en-US', shortLabel: 'EN', label: 'English' }
+  { code: 'en-US', shortLabel: 'EN', label: 'English' },
+  { code: 'zh-CN', shortLabel: '中', label: '中文' }
 ];
 
 export const locales = {
@@ -31,9 +31,9 @@ export const locales = {
     },
     hero: {
       imageAlt: 'Word、PowerPoint、Excel 多格式在线预览视觉图',
-      eyebrow: '企业级 Office 在线预览解决方案',
-      title: 'Flyfish Office Preview',
-      copy: '让业务系统拥有即开即看的文档预览体验。以稳定版式、轻量访问与可控交付为核心，覆盖公文、报表、演示材料与历史档案等高频场景。',
+      eyebrow: '专为业务系统打造的企业级 Office 预览',
+      title: '每一份 Office 文件，都能在网页高保真呈现。',
+      copy: '一套统一的浏览器预览体验，稳定承接 Word、PowerPoint 与 Excel。轻量接入、可控交付，适配公文、报表、演示材料与历史档案等高频业务场景。',
       primaryCta: '立即购买',
       secondaryCta: '查看在线演示',
       metricsAria: '产品能力',
@@ -300,9 +300,9 @@ export const locales = {
     },
     hero: {
       imageAlt: 'Office preview visual for Word, PowerPoint, and Excel',
-      eyebrow: 'Enterprise Office Preview Solution',
-      title: 'Flyfish Office Preview',
-      copy: 'Give your business system a fast, in-browser Office preview experience. Built for layout fidelity, lightweight access, and controlled delivery across documents, reports, presentations, and archive files.',
+      eyebrow: 'Enterprise Office preview, built for real workflows',
+      title: 'Every Office file. One faithful web preview.',
+      copy: 'Bring Word, PowerPoint, and Excel into one polished browser experience. Lightweight to integrate, predictable to deliver, and engineered for documents that matter.',
       primaryCta: 'Buy Now',
       secondaryCta: 'View Demo',
       metricsAria: 'Product capabilities',

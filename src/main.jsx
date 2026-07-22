@@ -208,14 +208,6 @@ function getBrowserLanguages() {
   return [...new Set(candidates)];
 }
 
-function getBrowserTimeZone() {
-  try {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-  } catch {
-    return '';
-  }
-}
-
 function isLikelyCrawler() {
   const userAgent = window.navigator.userAgent.toLowerCase();
   return /bot|crawler|spider|slurp|bingpreview|baiduspider|bytespider|duckduckbot|googlebot|yandexbot|facebookexternalhit|twitterbot|linkedinbot|semrush|ahrefs/.test(userAgent);
@@ -225,28 +217,7 @@ function detectLocaleFromBrowserFeatures() {
   const languages = getBrowserLanguages();
   const primaryLanguage = languages[0] || '';
 
-  if (primaryLanguage.startsWith('zh')) {
-    return 'zh-CN';
-  }
-
-  if (primaryLanguage) {
-    return 'en-US';
-  }
-
-  const chineseTimeZones = new Set([
-    'Asia/Shanghai',
-    'Asia/Chongqing',
-    'Asia/Hong_Kong',
-    'Asia/Macau',
-    'Asia/Taipei'
-  ]);
-  const timeZone = getBrowserTimeZone();
-
-  if (timeZone && !chineseTimeZones.has(timeZone)) {
-    return 'en-US';
-  }
-
-  return DEFAULT_LOCALE;
+  return primaryLanguage.startsWith('zh') ? 'zh-CN' : DEFAULT_LOCALE;
 }
 
 function resolveInitialLocale() {
@@ -257,6 +228,10 @@ function resolveInitialLocale() {
   const pathLocale = getLocaleFromPathname(window.location.pathname);
   if (pathLocale) {
     return pathLocale;
+  }
+
+  if (isRootEntryPath(window.location.pathname) && !isLikelyCrawler()) {
+    return detectLocaleFromBrowserFeatures();
   }
 
   return DEFAULT_LOCALE;
@@ -296,8 +271,45 @@ function App() {
     if (detectedLocale !== DEFAULT_LOCALE) {
       window.history.replaceState({}, '', getLocalizedHref(detectedLocale));
       setLocale(detectedLocale);
+      updateSeoLinks(detectedLocale, getLocaleConfig(detectedLocale));
     }
   }, []);
+
+  useEffect(() => {
+    const targets = Array.from(document.querySelectorAll([
+      '.section-heading',
+      '.format-card',
+      '.partner-card',
+      '.showcase-card',
+      '.strength-card',
+      '.pipeline-step',
+      '.scenario-list span',
+      '.pricing-group',
+      '.pricing-policy',
+      '.commercial-copy',
+      '.contact-panel'
+    ].join(',')));
+
+    targets.forEach((target) => target.classList.add('reveal-item'));
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+      targets.forEach((target) => target.classList.add('is-visible'));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+
+    targets.forEach((target) => observer.observe(target));
+
+    return () => observer.disconnect();
+  }, [locale]);
 
   const handleLocaleChange = (nextLocale) => {
     if (!localeCodes.includes(nextLocale)) {
@@ -327,6 +339,7 @@ function App() {
         <Pricing content={content} />
         <Commercial content={content} />
       </main>
+      <Footer content={content} locale={locale} onLocaleChange={handleLocaleChange} />
     </div>
   );
 }
@@ -336,8 +349,9 @@ function Hero({ content, locale, onLocaleChange }) {
 
   return (
     <section className="hero" id="top">
-      <img className="hero-media" src="/assets/office-hero-banner.png" alt={hero.imageAlt} />
-      <div className="hero-overlay" />
+      <img className="hero-media" src="/assets/office-hero-banner.png" alt={hero.imageAlt} fetchPriority="high" />
+      <div className="hero-overlay" aria-hidden="true" />
+      <div className="hero-aura" aria-hidden="true" />
       <header className="nav">
         <a className="brand" href="#top" aria-label={nav.homeLabel}>
           <img className="brand-logo" src="/assets/office-preview-logo-light.webp" alt="Office Preview" />
@@ -371,7 +385,7 @@ function Hero({ content, locale, onLocaleChange }) {
       </header>
 
       <div className="hero-content">
-        <p className="eyebrow">{hero.eyebrow}</p>
+        <p className="eyebrow hero-eyebrow"><span aria-hidden="true" />{hero.eyebrow}</p>
         <h1>{hero.title}</h1>
         <p className="hero-copy">{hero.copy}</p>
         <div className="hero-actions">
@@ -825,6 +839,44 @@ function Commercial({ content }) {
         </div>
       </div>
     </section>
+  );
+}
+
+function Footer({ content, locale, onLocaleChange }) {
+  const { nav, languageSwitcher } = content;
+
+  return (
+    <footer className="footer">
+      <div className="section-inner footer-layout">
+        <a className="footer-brand" href="#top" aria-label={nav.homeLabel}>
+          <img src="/assets/office-preview-logo-light.webp" alt="Office Preview" />
+          <span>{locale === 'zh-CN' ? '文档渲染与交付' : 'Document rendering and delivery'}</span>
+        </a>
+        <nav className="footer-links" aria-label={nav.ariaLabel}>
+          {nav.links.map((item) => (
+            <a href={item.href} key={item.href}>{item.label}</a>
+          ))}
+        </nav>
+        <div className="footer-meta">
+          <div className="language-switcher footer-language" aria-label={languageSwitcher.ariaLabel}>
+            <Languages size={15} aria-hidden="true" />
+            {LANGUAGE_OPTIONS.map((option) => (
+              <button
+                className={locale === option.code ? 'active' : ''}
+                type="button"
+                aria-label={option.label}
+                aria-pressed={locale === option.code}
+                onClick={() => onLocaleChange(option.code)}
+                key={option.code}
+              >
+                {option.shortLabel}
+              </button>
+            ))}
+          </div>
+          <span>© 2026 Flyfish Office Preview</span>
+        </div>
+      </div>
+    </footer>
   );
 }
 

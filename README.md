@@ -10,6 +10,7 @@ It supports:
 
 - A professional marketing homepage for Flyfish Office Preview
 - Chinese and English content managed through a shared locale configuration
+- English as the default root experience, with automatic Chinese selection only when the browser's primary language is Chinese
 - Direct language URLs for SEO:
   - `/zh-CN/`
   - `/en-US/`
