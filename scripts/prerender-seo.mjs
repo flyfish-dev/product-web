@@ -87,18 +87,26 @@ function renderStaticContent(locale) {
         </div>
       </header>
       <section class="hero" id="top">
-        <img class="hero-media" src="/assets/office-hero-banner.png" alt="${escapeHtml(content.hero.imageAlt)}" />
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-          <p class="eyebrow hero-eyebrow">${escapeHtml(content.hero.eyebrow)}</p>
-          <h1>${escapeHtml(content.hero.title)}</h1>
-          <p class="hero-copy">${escapeHtml(content.hero.copy)}</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="${shopUrl}">${escapeHtml(content.hero.primaryCta)}</a>
-            <a class="button button-secondary" href="${demoUrl}">${escapeHtml(content.hero.secondaryCta)}</a>
+        <div class="hero-grid"></div>
+        <div class="hero-shell">
+          <div class="hero-content">
+            <p class="eyebrow hero-eyebrow">${escapeHtml(content.hero.eyebrow)}</p>
+            <h1>${escapeHtml(content.hero.title)}</h1>
+            <p class="hero-copy">${escapeHtml(content.hero.copy)}</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="${shopUrl}">${escapeHtml(content.hero.primaryCta)}</a>
+              <a class="button button-secondary" href="${demoUrl}">${escapeHtml(content.hero.secondaryCta)}</a>
+            </div>
+            <div class="hero-metrics" aria-label="${escapeHtml(content.hero.metricsAria)}">
+              ${content.hero.metrics.map((item) => `<span>${escapeHtml(item)}</span>`).join('')}
+            </div>
           </div>
-          <div class="hero-metrics" aria-label="${escapeHtml(content.hero.metricsAria)}">
-            ${content.hero.metrics.map((item) => `<span>${escapeHtml(item)}</span>`).join('')}
+          <div class="hero-stage" role="img" aria-label="${escapeHtml(content.hero.imageAlt)}">
+            <div class="hero-stage-plane"></div>
+            <figure class="hero-preview hero-preview-pptx"><figcaption>PPTX</figcaption><img src="/assets/preview-slides.png" alt="" /></figure>
+            <figure class="hero-preview hero-preview-docx"><figcaption>DOCX</figcaption><img src="/assets/preview-word.png" alt="" /></figure>
+            <figure class="hero-preview hero-preview-xlsx"><figcaption>XLSX</figcaption><img src="/assets/preview-spreadsheet.png" alt="" /></figure>
+            <div class="hero-runtime-status"><span></span><strong>${escapeHtml(content.hero.runtimeLabel)}</strong><small>${escapeHtml(content.hero.runtimeDetail)}</small></div>
           </div>
         </div>
       </section>
@@ -264,7 +272,7 @@ function renderStaticContent(locale) {
                 </div>
                 <div class="pricing-source-grid">
                   ${content.pricing.source.tiers.map((tier) => `
-                    <article class="pricing-card${tier.key === 'commercial' ? ' featured source-featured' : ''}">
+                    <article class="pricing-card${tier.key === 'commercial' ? ' featured source-featured' : ''}${tier.key === 'enterprise' ? ' enterprise-tier' : ''}">
                       <div class="pricing-card-head">
                         <span class="pricing-kicker">${escapeHtml(tier.badge)}</span>
                         <h4>${escapeHtml(tier.name)}</h4>

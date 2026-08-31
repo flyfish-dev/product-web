@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   ArrowRight,
@@ -6,26 +6,30 @@ import {
   BookOpenText,
   Braces,
   CheckCircle2,
+  FileType2,
   FileSpreadsheet,
   FileText,
+  Files,
+  GalleryHorizontalEnd,
   Gauge,
-  Headphones,
   Layers3,
   Languages,
   LockKeyhole,
   Mail,
   MessageCircle,
   MonitorCheck,
+  Newspaper,
   Play,
   Presentation,
   RefreshCw,
   Rocket,
+  Send,
   ShieldCheck,
   ShoppingCart,
   Sparkles,
-  Table2,
+  Sheet,
+  TableProperties,
   Workflow,
-  X,
   Zap
 } from 'lucide-react';
 import {
@@ -40,19 +44,36 @@ import './styles.css';
 const shopUrl = SHOP_URL;
 const shopLinks = SHOP_LINKS;
 const demoUrl = 'https://demo.flyfish.group';
-const supportEmail = 'wybaby168@gmail.com';
-const supportWechat = 'Yous_Gift';
-const supportQrUrl = '/assets/customer-wechat.jpg';
+const supportEmail = 'admin@flyfish.dev';
 const siteUrl = 'https://product.flyfish.group';
 const localeCodes = LANGUAGE_OPTIONS.map((option) => option.code);
 
+const contactChannelMeta = {
+  wechat: {
+    icon: MessageCircle,
+    image: '/assets/customer-wechat.jpg'
+  },
+  official: {
+    icon: Newspaper,
+    image: '/assets/wechat-official.png'
+  },
+  whatsapp: {
+    icon: MessageCircle,
+    url: 'https://wa.me/qr/DY3NG2HEGJFGL1'
+  },
+  telegram: {
+    icon: Send,
+    url: 'https://t.me/wybaby168'
+  }
+};
+
 const formatMeta = [
-  { icon: FileText, tone: 'blue' },
-  { icon: BookOpenText, tone: 'green' },
-  { icon: Presentation, tone: 'amber' },
-  { icon: Play, tone: 'red' },
-  { icon: Table2, tone: 'emerald' },
-  { icon: FileSpreadsheet, tone: 'cyan' }
+  { icon: FileType2, tone: 'word' },
+  { icon: Files, tone: 'word' },
+  { icon: Presentation, tone: 'powerpoint' },
+  { icon: GalleryHorizontalEnd, tone: 'powerpoint' },
+  { icon: Sheet, tone: 'excel' },
+  { icon: TableProperties, tone: 'excel' }
 ];
 
 const strengthIcons = [
@@ -208,7 +229,7 @@ function detectLocaleFromBrowserFeatures() {
   const languages = getBrowserLanguages();
   const primaryLanguage = languages[0] || '';
 
-  return primaryLanguage.startsWith('zh') ? 'zh-CN' : DEFAULT_LOCALE;
+  return primaryLanguage.startsWith('zh') ? 'zh-CN' : 'en-US';
 }
 
 function resolveInitialLocale() {
@@ -295,7 +316,7 @@ function App() {
           observer.unobserve(entry.target);
         }
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    }, { rootMargin: '0px 0px -5% 0px', threshold: 0.08 });
 
     targets.forEach((target) => observer.observe(target));
 
@@ -329,7 +350,7 @@ function App() {
         <Architecture content={content} />
         <ScenarioBand content={content} />
         <Pricing content={content} />
-        <Commercial content={content} />
+        <Commercial content={content} locale={locale} />
       </main>
       <Footer content={content} locale={locale} onLocaleChange={handleLocaleChange} />
     </div>
@@ -338,9 +359,37 @@ function App() {
 
 function SiteNav({ content, locale, onLocaleChange }) {
   const { nav, languageSwitcher } = content;
+  const navRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const navElement = navRef.current;
+
+    if (!navElement) {
+      return undefined;
+    }
+
+    const updateNavClearance = () => {
+      const navBottom = navElement.getBoundingClientRect().bottom;
+      document.documentElement.style.setProperty('--nav-clearance', `${Math.ceil(navBottom + 24)}px`);
+    };
+    const resizeObserver = typeof ResizeObserver === 'undefined'
+      ? null
+      : new ResizeObserver(updateNavClearance);
+
+    updateNavClearance();
+    resizeObserver?.observe(navElement);
+    window.addEventListener('resize', updateNavClearance);
+    window.visualViewport?.addEventListener('resize', updateNavClearance);
+
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', updateNavClearance);
+      window.visualViewport?.removeEventListener('resize', updateNavClearance);
+    };
+  }, [locale]);
 
   return (
-    <header className="nav">
+    <header className="nav" ref={navRef}>
       <a className="brand" href="#top" aria-label={nav.homeLabel}>
         <img className="brand-logo" src="/assets/office-preview-logo-light.webp" alt="Office Preview" />
       </a>
@@ -376,36 +425,108 @@ function SiteNav({ content, locale, onLocaleChange }) {
 
 function Hero({ content }) {
   const { hero } = content;
+  const stageRef = useRef(null);
+  const pointerFrameRef = useRef(null);
+
+  useEffect(() => () => {
+    if (pointerFrameRef.current) {
+      window.cancelAnimationFrame(pointerFrameRef.current);
+    }
+  }, []);
+
+  const handlePointerMove = (event) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    if (pointerFrameRef.current) {
+      window.cancelAnimationFrame(pointerFrameRef.current);
+    }
+
+    const { clientX, clientY } = event;
+
+    pointerFrameRef.current = window.requestAnimationFrame(() => {
+      const stage = stageRef.current;
+
+      if (!stage) {
+        return;
+      }
+
+      const rect = stage.getBoundingClientRect();
+      const x = ((clientX - rect.left) / rect.width - 0.5) * 2;
+      const y = ((clientY - rect.top) / rect.height - 0.5) * 2;
+
+      stage.style.setProperty('--pointer-x', x.toFixed(3));
+      stage.style.setProperty('--pointer-y', y.toFixed(3));
+    });
+  };
+
+  const resetPointer = () => {
+    const stage = stageRef.current;
+
+    if (stage) {
+      stage.style.setProperty('--pointer-x', '0');
+      stage.style.setProperty('--pointer-y', '0');
+    }
+  };
 
   return (
     <section className="hero" id="top">
-      <img className="hero-media" src="/assets/office-hero-banner.png" alt={hero.imageAlt} fetchpriority="high" />
-      <div className="hero-overlay" aria-hidden="true" />
-      <div className="hero-aura" aria-hidden="true" />
-      <div className="hero-content">
-        <p className="eyebrow hero-eyebrow">
-          <ShieldCheck size={16} strokeWidth={1.8} aria-hidden="true" />
-          {hero.eyebrow}
-        </p>
-        <h1>{hero.title}</h1>
-        <p className="hero-copy">{hero.copy}</p>
-        <div className="hero-actions">
-          <a className="button button-primary" href={shopUrl} target="_blank" rel="noreferrer">
-            <ShoppingCart size={18} aria-hidden="true" />
-            {hero.primaryCta}
-          </a>
-          <a className="button button-secondary" href={demoUrl} target="_blank" rel="noreferrer">
-            <Rocket size={18} aria-hidden="true" />
-            {hero.secondaryCta}
-          </a>
+      <div className="hero-grid" aria-hidden="true" />
+      <div className="hero-shell">
+        <div className="hero-content">
+          <p className="eyebrow hero-eyebrow">
+            <ShieldCheck size={16} strokeWidth={1.8} aria-hidden="true" />
+            {hero.eyebrow}
+          </p>
+          <h1>{hero.title}</h1>
+          <p className="hero-copy">{hero.copy}</p>
+          <div className="hero-actions">
+            <a className="button button-primary" href={shopUrl} target="_blank" rel="noreferrer">
+              <ShoppingCart size={18} aria-hidden="true" />
+              {hero.primaryCta}
+            </a>
+            <a className="button button-secondary" href={demoUrl} target="_blank" rel="noreferrer">
+              <Rocket size={18} aria-hidden="true" />
+              {hero.secondaryCta}
+            </a>
+          </div>
+          <div className="hero-metrics" aria-label={hero.metricsAria}>
+            {hero.metrics.map((item) => (
+              <span key={item}>
+                <CheckCircle2 size={15} strokeWidth={1.8} aria-hidden="true" />
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
-        <div className="hero-metrics" aria-label={hero.metricsAria}>
-          {hero.metrics.map((item) => (
-            <span key={item}>
-              <CheckCircle2 size={15} strokeWidth={1.8} aria-hidden="true" />
-              {item}
-            </span>
-          ))}
+
+        <div
+          className="hero-stage"
+          ref={stageRef}
+          role="img"
+          aria-label={hero.imageAlt}
+          onPointerMove={handlePointerMove}
+          onPointerLeave={resetPointer}
+        >
+          <div className="hero-stage-plane" aria-hidden="true" />
+          <figure className="hero-preview hero-preview-pptx">
+            <figcaption><Presentation size={14} aria-hidden="true" /> PPTX</figcaption>
+            <img src="/assets/preview-slides.png" alt="" fetchPriority="high" />
+          </figure>
+          <figure className="hero-preview hero-preview-docx">
+            <figcaption><FileText size={14} aria-hidden="true" /> DOCX</figcaption>
+            <img src="/assets/preview-word.png" alt="" fetchPriority="high" />
+          </figure>
+          <figure className="hero-preview hero-preview-xlsx">
+            <figcaption><FileSpreadsheet size={14} aria-hidden="true" /> XLSX</figcaption>
+            <img src="/assets/preview-spreadsheet.png" alt="" fetchPriority="high" />
+          </figure>
+          <div className="hero-runtime-status" aria-hidden="true">
+            <span />
+            <strong>{hero.runtimeLabel}</strong>
+            <small>{hero.runtimeDetail}</small>
+          </div>
         </div>
       </div>
     </section>
@@ -429,8 +550,12 @@ function FormatStrip({ content }) {
 
             return (
             <article className={`format-card tone-${meta.tone}`} key={item.label}>
-              <FormatIcon size={22} aria-hidden="true" />
-              <strong>{item.label}</strong>
+              <div className="format-card-head">
+                <span className="format-icon">
+                  <FormatIcon size={23} strokeWidth={2} aria-hidden="true" />
+                </span>
+                <strong>{item.label}</strong>
+              </div>
               <span>{item.title}</span>
             </article>
             );
@@ -691,7 +816,7 @@ function Pricing({ content }) {
             </div>
             <div className="pricing-source-grid">
               {sourceTiers.map((tier) => (
-                <article className={`pricing-card${tier.featured ? ' featured source-featured' : ''}`} key={tier.name}>
+                <article className={`pricing-card${tier.featured ? ' featured source-featured' : ''}${tier.key === 'enterprise' ? ' enterprise-tier' : ''}`} key={tier.name}>
                   <div className="pricing-card-head">
                     <span className="pricing-kicker">{tier.badge}</span>
                     <h4>{tier.name}</h4>
@@ -754,57 +879,9 @@ function Pricing({ content }) {
   );
 }
 
-function ContactModal({ content, planName, onClose }) {
-  const { contactModal } = content;
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
-    const previousOverflow = document.body.style.overflow;
-
-    document.body.style.overflow = 'hidden';
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onClose]);
-
-  return (
-    <div className="contact-modal-backdrop" role="presentation" onMouseDown={(event) => {
-      if (event.target === event.currentTarget) {
-        onClose();
-      }
-    }}>
-      <div className="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title">
-        <button className="modal-close" type="button" onClick={onClose} aria-label={contactModal.closeLabel}>
-          <X size={20} aria-hidden="true" />
-        </button>
-        <div className="contact-modal-copy">
-          <span>{contactModal.eyebrow}</span>
-          <h3 id="contact-modal-title">{contactModal.titlePrefix} {planName} {contactModal.titleSuffix}</h3>
-          <p>{contactModal.copyPrefix} {supportWechat}{contactModal.copySuffix}</p>
-        </div>
-        <div className="qr-panel">
-          <img src={supportQrUrl} alt={contactModal.qrAlt} />
-          <strong>{contactModal.wechatLabel}: {supportWechat}</strong>
-          <small>{contactModal.qrHint}</small>
-        </div>
-        <div className="contact-modal-links">
-          <a href={`mailto:${supportEmail}`}>{contactModal.emailLabel}: {supportEmail}</a>
-          <span>{contactModal.scope}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Commercial({ content }) {
+function Commercial({ content, locale }) {
   const { contact } = content;
+  const isChinese = locale === 'zh-CN';
 
   return (
     <section className="section commercial" id="contact">
@@ -827,23 +904,48 @@ function Commercial({ content }) {
             <Mail size={20} aria-hidden="true" />
             <span>
               <strong>{contact.rows.email}</strong>
-              <small>{supportEmail}</small>
+              <small>{supportEmail} · {contact.emailNote}</small>
             </span>
+            <ArrowRight size={18} aria-hidden="true" />
           </a>
-          <div className="contact-row">
-            <MessageCircle size={20} aria-hidden="true" />
-            <span>
-              <strong>{contact.rows.wechat}</strong>
-              <small>{supportWechat}</small>
-            </span>
+          <div className={`contact-channel-grid${isChinese ? ' is-chinese' : ' is-international'}`} aria-label={contact.channelsAriaLabel}>
+            {contact.channels.map((channel) => {
+              const meta = contactChannelMeta[channel.key];
+              const ChannelIcon = meta.icon;
+              const contentNode = (
+                <>
+                  {meta.image ? (
+                    <div className="contact-channel-qr">
+                      <img src={meta.image} alt={channel.imageAlt} loading="lazy" />
+                    </div>
+                  ) : (
+                    <span className={`contact-channel-icon is-${channel.key}`}>
+                      <ChannelIcon size={22} aria-hidden="true" />
+                    </span>
+                  )}
+                  <span className="contact-channel-copy">
+                    <span className="contact-channel-title">
+                      {meta.image ? <ChannelIcon size={16} aria-hidden="true" /> : null}
+                      <strong>{channel.label}</strong>
+                    </span>
+                    <small>{channel.note}</small>
+                    <b>{channel.value}</b>
+                  </span>
+                  {meta.url ? <ArrowRight size={18} aria-hidden="true" /> : null}
+                </>
+              );
+
+              return meta.url ? (
+                <a className="contact-channel-card" href={meta.url} target="_blank" rel="noreferrer" key={channel.key}>
+                  {contentNode}
+                </a>
+              ) : (
+                <article className="contact-channel-card" key={channel.key}>
+                  {contentNode}
+                </article>
+              );
+            })}
           </div>
-          <a className="contact-row" href={demoUrl} target="_blank" rel="noreferrer">
-            <Headphones size={20} aria-hidden="true" />
-            <span>
-              <strong>{contact.rows.demo}</strong>
-              <small>demo.flyfish.group</small>
-            </span>
-          </a>
         </div>
       </div>
     </section>

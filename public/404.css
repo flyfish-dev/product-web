@@ -1,0 +1,117 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #071528;
+  color: #f6f9ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  background: #071528;
+}
+
+main {
+  width: min(720px, calc(100% - 40px));
+  padding: 48px 0 52px;
+  border-top: 1px solid #22405f;
+  border-bottom: 1px solid #22405f;
+}
+
+.brand {
+  display: inline-flex;
+  margin-bottom: 48px;
+}
+
+.brand img {
+  display: block;
+  width: 190px;
+  height: auto;
+}
+
+.code {
+  margin: 0 0 12px;
+  color: #45d6a4;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+h1 {
+  margin: 0 0 20px;
+  font-size: clamp(42px, 8vw, 72px);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.message {
+  max-width: 580px;
+  margin: 0;
+  color: #b8c6d8;
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+.message.en {
+  margin-top: 8px;
+  color: #8293aa;
+  font-size: 15px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+.actions a {
+  min-height: 46px;
+  padding: 0 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.actions .primary {
+  background: #2f73ea;
+}
+
+.actions .secondary {
+  border-color: #40536b;
+  background: #101f32;
+}
+
+.actions a:focus-visible {
+  outline: 3px solid #45d6a4;
+  outline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+  main {
+    padding: 36px 0 40px;
+  }
+
+  .brand {
+    margin-bottom: 38px;
+  }
+
+  .message {
+    font-size: 16px;
+  }
+
+  .actions a {
+    width: 100%;
+  }
+}

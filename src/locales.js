@@ -1,6 +1,6 @@
 import { OFFICE_PRICING } from './shopCatalog.js';
 
-export const DEFAULT_LOCALE = 'en-US';
+export const DEFAULT_LOCALE = 'zh-CN';
 
 export const LANGUAGE_STORAGE_KEY = 'flyfish-office-preview-locale';
 
@@ -33,13 +33,15 @@ export const locales = {
     },
     hero: {
       imageAlt: 'Word、PowerPoint、Excel 多格式在线预览视觉图',
-      eyebrow: '专为业务系统打造的企业级 Office 预览',
-      title: '每一份 Office 文件，都能在网页高保真呈现。',
-      copy: '一套统一的浏览器预览体验，稳定承接 Word、PowerPoint 与 Excel。轻量接入、可控交付，适配公文、报表、演示材料与历史档案等高频业务场景。',
+      eyebrow: '面向业务系统的企业级 Office 预览',
+      title: '让每一份 Office 文件，都在网页中准确呈现。',
+      copy: '以统一的浏览器体验承接 Word、PowerPoint 与 Excel。无需服务端格式转换，适配公文、报表、演示材料与历史档案等高频业务场景。',
       primaryCta: '立即购买',
       secondaryCta: '查看在线演示',
       metricsAria: '产品能力',
-      metrics: ['全格式预览', '私有化部署', '轻量化集成']
+      metrics: ['六类 Office 格式', '私有化部署', '按需加载'],
+      runtimeLabel: '浏览器端实时渲染',
+      runtimeDetail: 'DOC · DOCX · PPT · PPTX · XLS · XLSX'
     },
     formats: {
       ariaLabel: '支持格式',
@@ -91,24 +93,24 @@ export const locales = {
     },
     showcase: {
       eyebrow: '预览体验',
-      title: '清晰、稳定、自然，让文档阅读回到业务本身。',
-      copy: '面向客户侧阅读场景优化展示效果，兼顾文档细节、页面比例与信息扫描效率。',
+      title: '以真实文件验证渲染质量，不用概念代替效果。',
+      copy: '以下画面直接采集自最新在线 Demo，覆盖文档分页、演示控制和电子表格工作簿等完整阅读场景。',
       screenshotSuffix: '截图',
       items: [
         {
-          title: 'Word 文档预览',
+          title: '结构化 Word 文档',
           eyebrow: 'DOC / DOCX',
-          points: ['固定纸张宽度', '连续文档阅读', '表格与图片展示']
+          points: ['固定纸张比例与分页', '表格、图片与多语言内容', '连续阅读与页面模式']
         },
         {
-          title: '演示文稿预览',
+          title: '完整演示文稿体验',
           eyebrow: 'PPT / PPTX',
-          points: ['按页呈现', '版式比例保持', '适配图文混排']
+          points: ['缩略图与页码导航', '单页、滚动与放映模式', '母版、图文与比例保持']
         },
         {
-          title: '电子表格预览',
+          title: '可浏览的电子表格',
           eyebrow: 'XLS / XLSX',
-          points: ['工作表切换', '单元格样式', '表格数据扫描']
+          points: ['多工作表即时切换', '单元格样式与合并区域', '图表、公式与数据扫描']
         }
       ]
     },
@@ -261,29 +263,32 @@ export const locales = {
         body: '免费本地验证、单格式 ¥99 源码研究和开发版 ¥599 均仅限研究、评估、学习和非商业验证。未购买商业版或企业源码版的，不得将源码以任何形式应用于商业活动；对外部署、客户项目交付、商业系统集成请购买商业版或企业源码版。'
       }
     },
-    contactModal: {
-      closeLabel: '关闭联系弹窗',
-      eyebrow: '微信客服',
-      titlePrefix: '添加客服微信，了解',
-      titleSuffix: '开通方式',
-      copyPrefix: '请使用微信扫描二维码，或搜索微信号',
-      copySuffix: '。我们会根据部署环境、授权范围和交付需求，协助确认合适的开通方案。',
-      qrAlt: '微信客服二维码',
-      wechatLabel: '微信客服',
-      qrHint: '扫码添加，沟通授权购买与部署开通',
-      emailLabel: '售后邮箱',
-      scope: '适用于商业版、企业源码版授权咨询'
-    },
     contact: {
-      eyebrow: '购买与服务',
-      title: '面向企业项目交付，提供授权购买与售后支持。',
-      copy: '适用于内部系统、SaaS 产品、项目交付与定制化文档中台建设。欢迎通过以下方式获取产品与服务支持。',
+      eyebrow: '企业服务',
+      title: '从售前评估到交付上线，获得持续可靠的专业支持。',
+      copy: '面向企业采购、商业授权、私有化部署与项目交付，提供清晰、稳定、可持续的服务通道。',
+      emailNote: '售前咨询与售后支持',
+      channelsAriaLabel: '中文联系渠道',
       rows: {
-        shop: '购买链接',
-        email: '售后邮箱',
-        wechat: '微信客服',
-        demo: '在线演示'
-      }
+        shop: '购买与授权',
+        email: '企业售前与售后邮箱'
+      },
+      channels: [
+        {
+          key: 'wechat',
+          label: '客服微信',
+          value: 'Yous_Gift',
+          note: '商务咨询、商业授权与优先技术支持',
+          imageAlt: 'Office Preview 客服微信二维码'
+        },
+        {
+          key: 'official',
+          label: '微信公众号',
+          value: '飞鱼开源工作室',
+          note: '获取产品更新、技术实践与交付资讯',
+          imageAlt: '飞鱼开源工作室微信公众号二维码'
+        }
+      ]
     }
   },
   'en-US': {
@@ -309,13 +314,15 @@ export const locales = {
     },
     hero: {
       imageAlt: 'Office preview visual for Word, PowerPoint, and Excel',
-      eyebrow: 'Enterprise Office preview, built for real workflows',
-      title: 'Every Office file. One faithful web preview.',
-      copy: 'Bring Word, PowerPoint, and Excel into one polished browser experience. Lightweight to integrate, predictable to deliver, and engineered for documents that matter.',
+      eyebrow: 'Enterprise Office preview for business systems',
+      title: 'Render every Office file accurately on the web.',
+      copy: 'Bring Word, PowerPoint, and Excel into one browser experience without server-side format conversion. Built for reports, presentations, archives, and document-heavy workflows.',
       primaryCta: 'Buy Now',
       secondaryCta: 'View Demo',
       metricsAria: 'Product capabilities',
-      metrics: ['All-format preview', 'Private deployment', 'Lightweight integration']
+      metrics: ['Six Office formats', 'Private deployment', 'On-demand loading'],
+      runtimeLabel: 'Live in-browser rendering',
+      runtimeDetail: 'DOC · DOCX · PPT · PPTX · XLS · XLSX'
     },
     formats: {
       ariaLabel: 'Supported formats',
@@ -367,24 +374,24 @@ export const locales = {
     },
     showcase: {
       eyebrow: 'Preview Experience',
-      title: 'Clear, stable, and natural document viewing for business users.',
-      copy: 'Optimized for customer-facing reading scenarios with attention to document detail, page proportion, and fast information scanning.',
+      title: 'Judge rendering quality by real files, not abstract claims.',
+      copy: 'Every image below is captured from the latest live demo, covering document pagination, presentation controls, and complete spreadsheet workbooks.',
       screenshotSuffix: 'screenshot',
       items: [
         {
-          title: 'Word Document Preview',
+          title: 'Structured Word Documents',
           eyebrow: 'DOC / DOCX',
-          points: ['Fixed paper width', 'Continuous reading', 'Tables and images']
+          points: ['Fixed paper ratio and pagination', 'Tables, images, and multilingual text', 'Continuous and paged reading modes']
         },
         {
-          title: 'Presentation Preview',
+          title: 'Complete Presentation Experience',
           eyebrow: 'PPT / PPTX',
-          points: ['Slide-by-slide view', 'Preserved proportions', 'Text and image layouts']
+          points: ['Thumbnails and page navigation', 'Single-page, scroll, and slideshow modes', 'Masters, media, and aspect ratios']
         },
         {
-          title: 'Spreadsheet Preview',
+          title: 'Navigable Spreadsheets',
           eyebrow: 'XLS / XLSX',
-          points: ['Worksheet switching', 'Cell styling', 'Data scanning']
+          points: ['Instant worksheet switching', 'Cell styles and merged ranges', 'Charts, formulas, and fast data scanning']
         }
       ]
     },
@@ -537,29 +544,30 @@ export const locales = {
         body: `Free local evaluation, the $${OFFICE_PRICING.singleResearch.usd}+ single-format research source, and the $${OFFICE_PRICING.developer.usd} Developer edition are limited to research, evaluation, learning, and non-commercial validation. Source code may not be used commercially unless the Commercial or Enterprise Source license has been purchased.`
       }
     },
-    contactModal: {
-      closeLabel: 'Close contact dialog',
-      eyebrow: 'WeChat Support',
-      titlePrefix: 'Add support on WeChat to discuss',
-      titleSuffix: 'activation',
-      copyPrefix: 'Scan the QR code with WeChat, or search WeChat ID',
-      copySuffix: '. We will help confirm the right plan based on your deployment environment, license scope, and delivery needs.',
-      qrAlt: 'WeChat support QR code',
-      wechatLabel: 'WeChat',
-      qrHint: 'Scan to add support for license purchase and deployment activation',
-      emailLabel: 'Support email',
-      scope: 'For Commercial and Enterprise Source license inquiries'
-    },
     contact: {
-      eyebrow: 'Purchase & Service',
-      title: 'Licensing and after-sales support for business delivery.',
-      copy: 'Designed for internal systems, SaaS products, project delivery, and customized document-platform scenarios. Contact us for product and service support.',
+      eyebrow: 'Enterprise Service',
+      title: 'Professional support from pre-sales evaluation through production delivery.',
+      copy: 'Direct channels for enterprise procurement, commercial licensing, private deployment, integration, and ongoing product support.',
+      emailNote: 'Pre-sales and after-sales support',
+      channelsAriaLabel: 'International contact channels',
       rows: {
-        shop: 'Purchase Link',
-        email: 'Support Email',
-        wechat: 'WeChat Support',
-        demo: 'Online Demo'
-      }
+        shop: 'Purchase & Licensing',
+        email: 'Enterprise Sales & Support Email'
+      },
+      channels: [
+        {
+          key: 'whatsapp',
+          label: 'WhatsApp',
+          value: 'Open a direct chat',
+          note: 'Sales, licensing, and priority support'
+        },
+        {
+          key: 'telegram',
+          label: 'Telegram',
+          value: '@wybaby168',
+          note: 'Product consultation and delivery support'
+        }
+      ]
     }
   }
 };
