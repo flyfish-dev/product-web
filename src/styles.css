@@ -1400,6 +1400,122 @@ svg {
   background: #dfc98e;
 }
 
+.release-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 18px 28px;
+  margin-bottom: 32px;
+  padding-block: 24px;
+  border-block: 1px solid var(--line);
+}
+
+.release-summary time {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.release-summary > div {
+  flex: 1 1 360px;
+  min-width: 0;
+}
+
+.release-summary h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.release-summary p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.release-summary a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--green-deep);
+  font-size: 13px;
+}
+
+.pricing-variants {
+  display: grid;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.pricing-variants > small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.pricing-variants .pricing-button {
+  min-height: 44px;
+  margin: 0;
+  padding: 10px;
+  font-size: 12px;
+}
+
+.pricing-renewal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.pricing-renewal > svg {
+  color: var(--green-deep);
+}
+
+.pricing-renewal-copy {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.pricing-renewal h4 {
+  margin: 0 0 6px;
+  font-size: 15px;
+}
+
+.pricing-renewal p {
+  max-width: 660px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.pricing-renewal-price {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.pricing-renewal-price strong {
+  font-size: 24px;
+}
+
+.pricing-renewal-price span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.pricing-renewal-button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border-color: #b8cdbf;
+  color: var(--green-deep);
+  font-size: 13px;
+}
+
 .pricing-format-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1413,8 +1529,8 @@ svg {
   min-width: 0;
   min-height: 56px;
   align-items: center;
-  gap: 6px;
-  padding: 8px;
+  gap: 4px;
+  padding: 6px;
   overflow: hidden;
   border: 1px solid #c8d2e1;
   border-radius: 5px;
@@ -1447,8 +1563,8 @@ svg {
   display: grid;
   flex: 0 0 auto;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 20px;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.52);
 }
@@ -1459,18 +1575,14 @@ svg {
 }
 
 .pricing-format-copy strong {
-  overflow: hidden;
-  font-size: 10px;
-  text-overflow: ellipsis;
+  font-size: 9px;
   white-space: nowrap;
 }
 
 .pricing-format-copy small {
-  overflow: hidden;
   margin-top: 2px;
   opacity: 0.72;
   font-size: 8px;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -1813,6 +1925,12 @@ a.contact-channel-card:focus-visible {
   0% { box-shadow: 0 0 0 0 rgba(84, 213, 163, 0.32); }
   70% { box-shadow: 0 0 0 8px rgba(84, 213, 163, 0); }
   100% { box-shadow: 0 0 0 0 rgba(84, 213, 163, 0); }
+}
+
+@media (max-width: 1280px) {
+  .pricing-source-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 1160px) {
@@ -2170,6 +2288,19 @@ a.contact-channel-card:focus-visible {
 }
 
 @media (max-width: 420px) {
+  .pricing-card {
+    padding-inline: 12px;
+  }
+
+  .pricing-format-link {
+    gap: 3px;
+    padding-inline: 3px;
+  }
+
+  .pricing-format-icon {
+    width: 12px;
+  }
+
   .brand-logo {
     width: 152px;
   }

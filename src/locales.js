@@ -93,14 +93,20 @@ export const locales = {
     },
     showcase: {
       eyebrow: '预览体验',
-      title: '以真实文件验证渲染质量，不用概念代替效果。',
-      copy: '以下画面直接采集自最新在线 Demo，覆盖文档分页、演示控制和电子表格工作簿等完整阅读场景。',
+      title: '用真实文件，验证预览效果。',
+      copy: '在线 Demo 可直接上传自有文件，检查文档分页、演示控制和电子表格工作簿。以下画面展示对应阅读场景。',
+      release: {
+        date: '2026-10-19',
+        title: '十月更新：渐进阅读、旧格式图片与大表交互',
+        copy: 'DOCX 优先呈现可读页面，后台完成字体与版式校准；DOC 改进表格与行距；Excel 增加旧版 XLS 图片定位，延续视窗加载与单元格选区。复杂文件请先在 Demo 中验证。',
+        cta: '查看更新与集成文档'
+      },
       screenshotSuffix: '截图',
       items: [
         {
           title: '结构化 Word 文档',
           eyebrow: 'DOC / DOCX',
-          points: ['固定纸张比例与分页', '表格、图片与多语言内容', '连续阅读与页面模式']
+          points: ['DOCX Canvas 分页与渐进显示', '表格、图片与多语言内容', 'DOC 连续阅读与分页模式']
         },
         {
           title: '完整演示文稿体验',
@@ -178,7 +184,7 @@ export const locales = {
       currencyCode: 'CNY',
       checkout: {
         title: '人民币定价',
-        body: '中文站显示 CNY，商品价格与 Flyfish 商店保持一致。'
+        body: '按所选版本进入飞鱼小铺，核对授权范围与交付内容后下单。'
       },
       deployment: {
         label: '快速部署',
@@ -218,49 +224,63 @@ export const locales = {
             priceSuffix: '起',
             badge: '单格式源码 / 研究',
             copy: '适合聚焦某一种 Office 格式的源码学习、技术验证与专项研究。',
-            points: ['六种研究方向可选', '用于学习研究', '不含商用授权'],
+            points: ['按格式选择源码，Excel 请咨询', '用于学习研究', '不含商用授权'],
             cta: '选择源码',
             links: [
-              { code: 'DOC', label: '传统 Word' },
-              { code: 'DOCX', label: '标准 Word' },
-              { code: 'DOCX-CANVAS', displayCode: 'CANVAS', label: 'DOCX 渲染' },
-              { code: 'PPT', label: '经典演示' },
-              { code: 'PPTX', label: '现代演示' },
-              { code: 'EXCEL', label: 'XLS / XLSX' }
+              { code: 'DOC', label: `¥${OFFICE_PRICING.singleResearch.cny}` },
+              { code: 'DOCX', label: `¥${OFFICE_PRICING.singleResearch.cny}` },
+              { code: 'DOCX-CANVAS', displayCode: 'CANVAS', label: `¥${OFFICE_PRICING.canvasResearch.cny}` },
+              { code: 'PPT', label: `¥${OFFICE_PRICING.singleResearch.cny}` },
+              { code: 'PPTX', label: `¥${OFFICE_PRICING.singleResearch.cny}` },
+              { code: 'EXCEL', label: '咨询' }
             ]
           },
           {
             key: 'developer',
             name: '开发版',
             price: OFFICE_PRICING.developer.cny,
-            badge: '完整源码 / 非商业',
-            copy: '适合个人开发者、单项目验证和学习研究，帮助团队先跑通完整预览链路。',
-            points: ['交付完整源码', '基础集成文档', '30 天基础答疑', '学习研究与非商业验证'],
-            cta: '购买开发版'
+            badge: '源码交付 / 非商业',
+            copy: '选择一种 DOCX 引擎，搭配其他格式源码与集成示例，完成项目技术验证。',
+            points: ['Canvas / HTML 引擎二选一', '集成示例与其他格式源码', '基础集成文档与答疑', '30 天非商用验证，限一个来源域'],
+            cta: '购买开发版',
+            variantsLabel: '选择开发版 DOCX 引擎',
+            variants: [
+              { key: 'allFormatSource', label: 'Canvas DOCX', ariaLabel: '购买开发版 · Canvas DOCX' },
+              { key: 'htmlFormatSource', label: 'HTML DOCXJS', ariaLabel: '购买开发版 · HTML DOCXJS' }
+            ]
           },
           {
             key: 'commercial',
             name: '商业版',
             price: OFFICE_PRICING.commercial.cny,
+            priceSuffix: '含首年维护',
             badge: '商用授权',
             copy: '适合 SaaS、OA、知识库、低代码平台和中小企业系统，面向真实项目上线。',
-            points: ['交付完整源码', '包含商用授权', '部署指引与集成支持', '1 年版本更新'],
+            points: ['交付预览源码', '约定项目的永久商用运行授权', '最多 5 个具体来源或 1 个 SaaS 泛域名', '含首年代码更新与维护'],
             cta: '购买商业版'
           },
           {
             key: 'enterprise',
             name: '企业源码版',
             price: OFFICE_PRICING.enterprise.cny,
+            priceSuffix: '含首年维护',
             badge: '企业级源码授权',
             copy: '适合政企、集团、私有化交付商和 ISV，覆盖更深的私有化与交付支持。',
-            points: ['交付完整源码', '企业级源码授权', '私有化部署联调', '1 年优先维护与适配建议'],
+            points: ['交付预览源码与企业授权工具', '按合同约定部署与项目分发范围', '私有化部署联调', '含首年代码更新与优先维护'],
             cta: '购买企业版'
           }
-        ]
+        ],
+        renewal: {
+          title: '已有商业版或企业版授权？',
+          copy: '首购已含一年更新与维护。后续可按年续费服务和代码更新；已取得的永久运行授权不因未续费而失效。续费不扩大原有授权范围，不适用于开发版。',
+          price: OFFICE_PRICING.renewal.cny,
+          unit: '/ 年',
+          cta: '续费服务与代码更新'
+        }
       },
       policy: {
         title: '授权说明：',
-        body: '免费本地验证、单格式 ¥99 源码研究和开发版 ¥599 均仅限研究、评估、学习和非商业验证。未购买商业版或企业源码版的，不得将源码以任何形式应用于商业活动；对外部署、客户项目交付、商业系统集成请购买商业版或企业源码版。'
+        body: `免费本地验证、¥${OFFICE_PRICING.singleResearch.cny} 起的单格式研究版和 ¥${OFFICE_PRICING.developer.cny} 开发版均不含商用授权。商业项目请选购商业版或企业版，具体使用范围、交付内容与维护条款以所选商品及签署合同为准。`
       }
     },
     contact: {
@@ -375,13 +395,19 @@ export const locales = {
     showcase: {
       eyebrow: 'Preview Experience',
       title: 'Judge rendering quality by real files, not abstract claims.',
-      copy: 'Every image below is captured from the latest live demo, covering document pagination, presentation controls, and complete spreadsheet workbooks.',
+      copy: 'Upload your own files to the live demo to assess pagination, presentation controls, and workbook navigation. The images below illustrate these reading workflows.',
+      release: {
+        date: '2026-10-19',
+        title: 'October update: progressive reading, legacy pictures and large sheets',
+        copy: 'DOCX shows readable pages before background font and layout calibration completes. DOC improves tables and line spacing. Excel adds legacy XLS picture placement alongside viewport loading and cell-range selection. Evaluate complex files in the demo first.',
+        cta: 'Read the release and integration guide'
+      },
       screenshotSuffix: 'screenshot',
       items: [
         {
           title: 'Structured Word Documents',
           eyebrow: 'DOC / DOCX',
-          points: ['Fixed paper ratio and pagination', 'Tables, images, and multilingual text', 'Continuous and paged reading modes']
+          points: ['Paged Canvas DOCX with progressive display', 'Tables, images, and multilingual text', 'Continuous and paged DOC reading']
         },
         {
           title: 'Complete Presentation Experience',
@@ -459,7 +485,7 @@ export const locales = {
       currencyCode: 'USD',
       checkout: {
         title: 'USD pricing',
-        body: 'Prices match Flyfish Shop. Secure international checkout is available with Stripe.'
+        body: 'Select an edition to review its license and delivery terms in Flyfish Shop. International checkout is available with Stripe.'
       },
       deployment: {
         label: 'Quick Deployment',
@@ -499,49 +525,63 @@ export const locales = {
             pricePrefix: 'From',
             badge: 'Single Format / Research',
             copy: 'For developers who want to study a focused Office format renderer in depth.',
-            points: ['Six research tracks available', 'For learning and research', 'No commercial use'],
+            points: ['Choose a format; contact us for Excel', 'For learning and research', 'No commercial use'],
             cta: 'Choose Source',
             links: [
-              { code: 'DOC', label: 'Legacy Word' },
-              { code: 'DOCX', label: 'Modern Word' },
-              { code: 'DOCX-CANVAS', displayCode: 'CANVAS', label: 'DOCX render' },
-              { code: 'PPT', label: 'Legacy slides' },
-              { code: 'PPTX', label: 'Modern slides' },
-              { code: 'EXCEL', label: 'XLS / XLSX' }
+              { code: 'DOC', label: `$${OFFICE_PRICING.singleResearch.usd}` },
+              { code: 'DOCX', label: `$${OFFICE_PRICING.singleResearch.usd}` },
+              { code: 'DOCX-CANVAS', displayCode: 'CANVAS', label: `$${OFFICE_PRICING.canvasResearch.usd}` },
+              { code: 'PPT', label: `$${OFFICE_PRICING.singleResearch.usd}` },
+              { code: 'PPTX', label: `$${OFFICE_PRICING.singleResearch.usd}` },
+              { code: 'EXCEL', label: 'Contact' }
             ]
           },
           {
             key: 'developer',
             name: 'Developer',
             price: OFFICE_PRICING.developer.usd,
-            badge: 'Full Source / Non-commercial',
-            copy: 'For individual developers, project validation, and non-commercial research before full product integration.',
-            points: ['Full source delivery', 'Basic integration documentation', '30 days of basic Q&A', 'Learning and non-commercial validation'],
-            cta: 'Buy Developer'
+            badge: 'Source / Non-commercial',
+            copy: 'Choose one DOCX engine, with source for the other formats and an integrated demo for technical evaluation.',
+            points: ['Choose Canvas or HTML for DOCX', 'Integrated demo and other format source', 'Integration documentation and basic Q&A', '30-day non-commercial license, one origin'],
+            cta: 'Buy Developer',
+            variantsLabel: 'Choose your Developer DOCX engine',
+            variants: [
+              { key: 'allFormatSource', label: 'Canvas DOCX', ariaLabel: 'Buy Developer · Canvas DOCX' },
+              { key: 'htmlFormatSource', label: 'HTML DOCXJS', ariaLabel: 'Buy Developer · HTML DOCXJS' }
+            ]
           },
           {
             key: 'commercial',
             name: 'Commercial',
             price: OFFICE_PRICING.commercial.usd,
+            priceSuffix: 'incl. first-year support',
             badge: 'Commercial License',
             copy: 'For SaaS products, OA systems, knowledge bases, low-code platforms, and SMB business systems going live.',
-            points: ['Full source delivery', 'Commercial usage rights', 'Deployment and integration guidance', '1 year of version updates'],
+            points: ['Preview source delivery', 'Perpetual runtime rights for the agreed project', 'Up to 5 specific origins or 1 SaaS wildcard', 'First-year code updates and maintenance'],
             cta: 'Buy Commercial'
           },
           {
             key: 'enterprise',
             name: 'Enterprise Source',
             price: OFFICE_PRICING.enterprise.usd,
+            priceSuffix: 'incl. first-year support',
             badge: 'Enterprise Source License',
             copy: 'For government, enterprise groups, private-delivery vendors, and ISVs with deeper delivery requirements.',
-            points: ['Full source delivery', 'Enterprise source license', 'Private deployment joint debugging', '1 year of priority maintenance advice'],
+            points: ['Preview source and enterprise licensing tools', 'Deployment and distribution scope by contract', 'Private deployment integration support', 'First-year updates and priority maintenance'],
             cta: 'Buy Enterprise'
           }
-        ]
+        ],
+        renewal: {
+          title: 'Already licensed for Commercial or Enterprise?',
+          copy: 'The first year of updates and maintenance is included. Renew for continued service and code updates; an existing perpetual runtime license does not expire if you do not renew. Renewal does not extend the original usage scope and excludes Developer.',
+          price: OFFICE_PRICING.renewal.usd,
+          unit: '/ year',
+          cta: 'Renew Support and Updates'
+        }
       },
       policy: {
         title: 'License note:',
-        body: `Free local evaluation, the $${OFFICE_PRICING.singleResearch.usd}+ single-format research source, and the $${OFFICE_PRICING.developer.usd} Developer edition are limited to research, evaluation, learning, and non-commercial validation. Source code may not be used commercially unless the Commercial or Enterprise Source license has been purchased.`
+        body: `Free local evaluation, single-format research from $${OFFICE_PRICING.singleResearch.usd}, and the $${OFFICE_PRICING.developer.usd} Developer edition do not include commercial rights. Commercial projects require a Commercial or Enterprise license. Usage scope, delivery and maintenance are governed by the selected product and signed contract.`
       }
     },
     contact: {

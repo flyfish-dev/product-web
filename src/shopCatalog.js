@@ -1,38 +1,39 @@
-export const SHOP_URL = 'https://dev.flyfish.group/shop/item-list';
-
-export const SHOP_ITEM_IDS = {
-  fullDeployment: '1005',
-  allFormatSource: '1004',
-  commercialSource: '1007',
-  enterpriseSource: '1008',
-  docSource: '2',
-  docxSource: '1003',
-  docxCanvasSource: '1010',
-  pptSource: '1002',
-  pptxSource: '1'
+// Verified against the public shop catalog on 2026-10-10.
+// Keep SKU IDs, stable codes and effective prices together for release validation.
+export const SHOP_OFFERS = {
+  fullDeployment: { itemId: '1005', price: { cny: '129', usd: '20' } },
+  allFormatSource: { itemId: '1004', skuId: '29', skuCode: 'CANVAS_DOCX', price: { cny: '599', usd: '93' } },
+  htmlFormatSource: { itemId: '1004', skuId: '30', skuCode: 'HTML_DOCXJS', price: { cny: '599', usd: '93' } },
+  commercialSource: { itemId: '1004', skuId: '7', skuCode: 'COMMERCIAL', price: { cny: '1499', usd: '232' } },
+  enterpriseSource: { itemId: '1004', skuId: '8', skuCode: 'ENTERPRISE', price: { cny: '4999', usd: '774' } },
+  licenseRenewal: { itemId: '1004', skuId: '10', skuCode: 'RENEWAL', price: { cny: '199', usd: '31' } },
+  docSource: { itemId: '2', price: { cny: '99', usd: '15' } },
+  docxSource: { itemId: '1003', price: { cny: '99', usd: '15' } },
+  docxCanvasSource: { itemId: '1010', price: { cny: '139', usd: '22' } },
+  pptSource: { itemId: '1002', price: { cny: '99', usd: '15' } },
+  pptxSource: { itemId: '1', price: { cny: '99', usd: '15' } }
 };
 
-export const shopDetailUrl = (id) => `https://dev.flyfish.group/shop/detail/${id}`;
+export function shopDetailUrl(id, skuId) {
+  const url = new URL(`https://dev.flyfish.group/shop/detail/${encodeURIComponent(id)}`);
+  if (skuId != null) url.searchParams.set('sku', skuId);
+  return url.href;
+}
+
+export const SHOP_URL = shopDetailUrl('1004');
 
 export const SHOP_LINKS = {
-  fullDeployment: shopDetailUrl(SHOP_ITEM_IDS.fullDeployment),
-  allFormatSource: shopDetailUrl(SHOP_ITEM_IDS.allFormatSource),
-  commercialSource: shopDetailUrl(SHOP_ITEM_IDS.commercialSource),
-  enterpriseSource: shopDetailUrl(SHOP_ITEM_IDS.enterpriseSource),
-  docSource: shopDetailUrl(SHOP_ITEM_IDS.docSource),
-  docxSource: shopDetailUrl(SHOP_ITEM_IDS.docxSource),
-  docxCanvasSource: shopDetailUrl(SHOP_ITEM_IDS.docxCanvasSource),
-  pptSource: shopDetailUrl(SHOP_ITEM_IDS.pptSource),
-  pptxSource: shopDetailUrl(SHOP_ITEM_IDS.pptxSource),
-  excelSource: `${SHOP_URL}#contact`
+  ...Object.fromEntries(Object.entries(SHOP_OFFERS).map(([key, offer]) => [key, shopDetailUrl(offer.itemId, offer.skuId)])),
+  // Excel has no standalone public listing; do not imply a purchasable SKU.
+  excelSource: '#contact'
 };
 
-// Verified against the live Flyfish Shop catalog on 2026-07-22.
-// USD values use the shop's effective USD prices and are the amounts sent to Stripe.
 export const OFFICE_PRICING = {
-  deployment: { cny: '129', usd: '20' },
-  singleResearch: { cny: '99', usd: '15' },
-  developer: { cny: '599', usd: '89' },
-  commercial: { cny: '1499', usd: '222' },
-  enterprise: { cny: '4999', usd: '738' }
+  deployment: SHOP_OFFERS.fullDeployment.price,
+  singleResearch: SHOP_OFFERS.docSource.price,
+  canvasResearch: SHOP_OFFERS.docxCanvasSource.price,
+  developer: SHOP_OFFERS.allFormatSource.price,
+  commercial: SHOP_OFFERS.commercialSource.price,
+  enterprise: SHOP_OFFERS.enterpriseSource.price,
+  renewal: SHOP_OFFERS.licenseRenewal.price
 };

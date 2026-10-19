@@ -9,8 +9,7 @@ const distDir = path.join(rootDir, 'dist');
 const siteUrl = 'https://product.flyfish.group';
 const shopUrl = SHOP_URL;
 const demoUrl = 'https://demo.flyfish.group';
-const supportEmail = 'wybaby168@gmail.com';
-const supportWechat = 'Yous_Gift';
+const supportEmail = 'admin@flyfish.dev';
 const shopLinks = SHOP_LINKS;
 const deploymentUrls = {
   deployment: shopLinks.fullDeployment,
@@ -40,6 +39,12 @@ const showcaseImages = [
   '/assets/preview-slides.png',
   '/assets/preview-spreadsheet.png'
 ];
+const contactChannels = {
+  wechat: { image: '/assets/customer-wechat.jpg' },
+  official: { image: '/assets/wechat-official.png' },
+  whatsapp: { url: 'https://wa.me/qr/DY3NG2HEGJFGL1' },
+  telegram: { url: 'https://t.me/wybaby168' }
+};
 
 function escapeHtml(value) {
   return String(value)
@@ -163,6 +168,14 @@ function renderStaticContent(locale) {
               <h2>${escapeHtml(content.showcase.title)}</h2>
               <p>${escapeHtml(content.showcase.copy)}</p>
             </div>
+            <div class="release-summary">
+              <time datetime="${content.showcase.release.date}">${content.showcase.release.date}</time>
+              <div>
+                <h3>${escapeHtml(content.showcase.release.title)}</h3>
+                <p>${escapeHtml(content.showcase.release.copy)}</p>
+              </div>
+              <a href="https://officejs-doc.pages.dev/#release-notes">${escapeHtml(content.showcase.release.cta)}</a>
+            </div>
             <div class="showcase-grid">
               ${content.showcase.items.map((item, index) => `
                 <article class="showcase-card">
@@ -272,7 +285,7 @@ function renderStaticContent(locale) {
                 </div>
                 <div class="pricing-source-grid">
                   ${content.pricing.source.tiers.map((tier) => `
-                    <article class="pricing-card${tier.key === 'commercial' ? ' featured source-featured' : ''}${tier.key === 'enterprise' ? ' enterprise-tier' : ''}">
+                    <article class="pricing-card${tier.key === 'commercial' ? ' featured source-featured' : ''}${tier.key === 'enterprise' ? ' enterprise-tier' : ''}" data-plan="${escapeHtml(tier.key)}">
                       <div class="pricing-card-head">
                         <span class="pricing-kicker">${escapeHtml(tier.badge)}</span>
                         <h4>${escapeHtml(tier.name)}</h4>
@@ -282,11 +295,24 @@ function renderStaticContent(locale) {
                       ${renderList(tier.points)}
                       ${tier.links ? `
                         <div class="pricing-format-grid" aria-label="${escapeHtml(tier.name + ' ' + content.pricing.source.singleLinksAriaSuffix)}">
-                          ${tier.links.map((link) => '<a class="pricing-format-link tone-' + (sourceTones[link.code] || 'word') + '" href="' + (sourceUrls[link.code] || shopUrl) + '"><span class="pricing-format-copy"><strong>' + escapeHtml(link.displayCode || link.code) + '</strong><small>' + escapeHtml(link.label) + '</small></span></a>').join('')}
+                          ${tier.links.map((link) => '<a class="pricing-format-link tone-' + (sourceTones[link.code] || 'word') + '" href="' + sourceUrls[link.code] + '" aria-label="' + escapeHtml(link.code + ' · ' + link.label) + '"><span class="pricing-format-copy"><strong>' + escapeHtml(link.displayCode || link.code) + '</strong><small>' + escapeHtml(link.label) + '</small></span></a>').join('')}
                         </div>
-                      ` : `<a class="button pricing-button" href="${sourceUrls[tier.key] || shopUrl}">${escapeHtml(tier.cta)}</a>`}
+                      ` : tier.variants ? `
+                        <div class="pricing-variants" role="group" aria-label="${escapeHtml(tier.variantsLabel)}">
+                          <small>${escapeHtml(tier.variantsLabel)}</small>
+                          ${tier.variants.map((variant) => `<a class="button pricing-button" href="${shopLinks[variant.key]}" aria-label="${escapeHtml(variant.ariaLabel)}">${escapeHtml(variant.label)}</a>`).join('')}
+                        </div>
+                      ` : `<a class="button pricing-button" href="${sourceUrls[tier.key]}">${escapeHtml(tier.cta)}</a>`}
                     </article>
                   `).join('')}
+                </div>
+                <div class="pricing-renewal">
+                  <div class="pricing-renewal-copy">
+                    <h4>${escapeHtml(content.pricing.source.renewal.title)}</h4>
+                    <p>${escapeHtml(content.pricing.source.renewal.copy)}</p>
+                  </div>
+                  <div class="pricing-renewal-price"><strong>${escapeHtml(content.pricing.currencySymbol + content.pricing.source.renewal.price)}</strong><span>${escapeHtml(content.pricing.source.renewal.unit)}</span></div>
+                  <a class="button pricing-renewal-button" href="${shopLinks.licenseRenewal}">${escapeHtml(content.pricing.source.renewal.cta)}</a>
                 </div>
               </section>
             </div>
@@ -304,10 +330,15 @@ function renderStaticContent(locale) {
               <p>${escapeHtml(content.contact.copy)}</p>
             </div>
             <div class="contact-panel">
-              <a class="contact-row strong" href="${shopUrl}"><span><strong>${escapeHtml(content.contact.rows.shop)}</strong><small>https://dev.flyfish.group/shop/item-list</small></span></a>
-              <a class="contact-row" href="mailto:${supportEmail}"><span><strong>${escapeHtml(content.contact.rows.email)}</strong><small>${supportEmail}</small></span></a>
-              <div class="contact-row"><span><strong>${escapeHtml(content.contact.rows.wechat)}</strong><small>${supportWechat}</small></span></div>
-              <a class="contact-row" href="${demoUrl}"><span><strong>${escapeHtml(content.contact.rows.demo)}</strong><small>demo.flyfish.group</small></span></a>
+              <a class="contact-row strong" href="${shopUrl}"><span><strong>${escapeHtml(content.contact.rows.shop)}</strong><small>${shopUrl}</small></span></a>
+              <a class="contact-row" href="mailto:${supportEmail}"><span><strong>${escapeHtml(content.contact.rows.email)}</strong><small>${supportEmail} · ${escapeHtml(content.contact.emailNote)}</small></span></a>
+              <div class="contact-channel-grid" aria-label="${escapeHtml(content.contact.channelsAriaLabel)}">
+                ${content.contact.channels.map((channel) => {
+                  const meta = contactChannels[channel.key];
+                  const body = `${meta.image ? `<div class="contact-channel-qr"><img src="${meta.image}" alt="${escapeHtml(channel.imageAlt)}" loading="lazy" /></div>` : ''}<span class="contact-channel-copy"><strong>${escapeHtml(channel.label)}</strong><small>${escapeHtml(channel.note)}</small><b>${escapeHtml(channel.value)}</b></span>`;
+                  return meta.url ? `<a class="contact-channel-card" href="${meta.url}">${body}</a>` : `<div class="contact-channel-card">${body}</div>`;
+                }).join('')}
+              </div>
             </div>
           </div>
         </section>
@@ -358,7 +389,7 @@ function injectHead(html, locale, canonicalPath) {
 
 function renderSitemap() {
   const updatedAt = new Date().toISOString().slice(0, 10);
-  const paths = ['/', ...LANGUAGE_OPTIONS.map((option) => `/${option.code}/`)];
+  const paths = LANGUAGE_OPTIONS.map((option) => `/${option.code}/`);
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
@@ -378,7 +409,7 @@ async function writeLocalePage(baseHtml, locale, canonicalPath, filePath) {
 }
 
 const baseHtml = await readFile(path.join(distDir, 'index.html'), 'utf8');
-await writeLocalePage(baseHtml, DEFAULT_LOCALE, '/', path.join(distDir, 'index.html'));
+await writeLocalePage(baseHtml, DEFAULT_LOCALE, `/${DEFAULT_LOCALE}/`, path.join(distDir, 'index.html'));
 await Promise.all(
   LANGUAGE_OPTIONS.map((option) => writeLocalePage(
     baseHtml,

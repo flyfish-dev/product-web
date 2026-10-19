@@ -171,10 +171,7 @@ function updateMetaTag(name, content) {
 function updateSeoLinks(locale, content) {
   updateMetaTag('description', content.meta.description);
 
-  const hasExplicitLocalePath = typeof window !== 'undefined'
-    ? Boolean(getLocaleFromPathname(window.location.pathname))
-    : true;
-  const canonicalPath = hasExplicitLocalePath ? getLocalePath(locale) : '/';
+  const canonicalPath = getLocalePath(locale);
   const canonical = ensureHeadTag('link[rel="canonical"]', () => {
     const link = document.createElement('link');
     link.rel = 'canonical';
@@ -220,11 +217,6 @@ function getBrowserLanguages() {
   return [...new Set(candidates)];
 }
 
-function isLikelyCrawler() {
-  const userAgent = window.navigator.userAgent.toLowerCase();
-  return /bot|crawler|spider|slurp|bingpreview|baiduspider|bytespider|duckduckbot|googlebot|yandexbot|facebookexternalhit|twitterbot|linkedinbot|semrush|ahrefs/.test(userAgent);
-}
-
 function detectLocaleFromBrowserFeatures() {
   const languages = getBrowserLanguages();
   const primaryLanguage = languages[0] || '';
@@ -242,7 +234,7 @@ function resolveInitialLocale() {
     return pathLocale;
   }
 
-  if (isRootEntryPath(window.location.pathname) && !isLikelyCrawler()) {
+  if (isRootEntryPath(window.location.pathname)) {
     return detectLocaleFromBrowserFeatures();
   }
 
@@ -274,17 +266,15 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!isRootEntryPath(window.location.pathname) || isLikelyCrawler()) {
+    if (!isRootEntryPath(window.location.pathname)) {
       return;
     }
 
     const detectedLocale = detectLocaleFromBrowserFeatures();
 
-    if (detectedLocale !== DEFAULT_LOCALE) {
-      window.history.replaceState({}, '', getLocalizedHref(detectedLocale));
-      setLocale(detectedLocale);
-      updateSeoLinks(detectedLocale, getLocaleConfig(detectedLocale));
-    }
+    window.history.replaceState({}, '', getLocalizedHref(detectedLocale));
+    setLocale(detectedLocale);
+    updateSeoLinks(detectedLocale, getLocaleConfig(detectedLocale));
   }, []);
 
   useEffect(() => {
@@ -619,6 +609,16 @@ function Showcase({ content }) {
           <h2>{showcase.title}</h2>
           <p>{showcase.copy}</p>
         </div>
+        <div className="release-summary">
+          <time dateTime={showcase.release.date}>{showcase.release.date}</time>
+          <div>
+            <h3>{showcase.release.title}</h3>
+            <p>{showcase.release.copy}</p>
+          </div>
+          <a href="https://officejs-doc.pages.dev/#release-notes" target="_blank" rel="noreferrer">
+            {showcase.release.cta}<ArrowRight size={16} aria-hidden="true" />
+          </a>
+        </div>
         <div className="showcase-grid">
           {showcase.items.map((item, index) => (
             <article className="showcase-card" key={item.title}>
@@ -816,7 +816,7 @@ function Pricing({ content }) {
             </div>
             <div className="pricing-source-grid">
               {sourceTiers.map((tier) => (
-                <article className={`pricing-card${tier.featured ? ' featured source-featured' : ''}${tier.key === 'enterprise' ? ' enterprise-tier' : ''}`} key={tier.name}>
+                <article className={`pricing-card${tier.featured ? ' featured source-featured' : ''}${tier.key === 'enterprise' ? ' enterprise-tier' : ''}`} data-plan={tier.key} key={tier.name}>
                   <div className="pricing-card-head">
                     <span className="pricing-kicker">{tier.badge}</span>
                     <h4>{tier.name}</h4>
@@ -842,7 +842,7 @@ function Pricing({ content }) {
                         const LinkIcon = link.icon;
 
                         return (
-                          <a className={'pricing-format-link tone-' + link.tone} href={link.url} target="_blank" rel="noreferrer" key={link.code}>
+                          <a className={'pricing-format-link tone-' + link.tone} href={link.url} target={link.url.startsWith('#') ? undefined : '_blank'} rel={link.url.startsWith('#') ? undefined : 'noreferrer'} aria-label={`${link.code} · ${link.label}`} title={`${link.code} · ${link.label}`} key={link.code}>
                             <span className="pricing-format-icon">
                               <LinkIcon size={12} aria-hidden="true" />
                             </span>
@@ -854,6 +854,17 @@ function Pricing({ content }) {
                         );
                       })}
                     </div>
+                  ) : tier.variants ? (
+                    <div className="pricing-variants" role="group" aria-label={tier.variantsLabel}>
+                      <small>{tier.variantsLabel}</small>
+                      {tier.variants.map((variant) => (
+                        <a className="button pricing-button" href={shopLinks[variant.key]} target="_blank" rel="noreferrer" aria-label={variant.ariaLabel} key={variant.key}>
+                          <ShoppingCart size={16} aria-hidden="true" />
+                          {variant.label}
+                          <ArrowRight size={14} aria-hidden="true" />
+                        </a>
+                      ))}
+                    </div>
                   ) : (
                     <a className="button pricing-button" href={tier.url} target="_blank" rel="noreferrer">
                       <ShoppingCart size={18} aria-hidden="true" />
@@ -862,6 +873,21 @@ function Pricing({ content }) {
                   )}
                 </article>
               ))}
+            </div>
+            <div className="pricing-renewal">
+              <RefreshCw size={22} aria-hidden="true" />
+              <div className="pricing-renewal-copy">
+                <h4>{pricing.source.renewal.title}</h4>
+                <p>{pricing.source.renewal.copy}</p>
+              </div>
+              <div className="pricing-renewal-price">
+                <strong>{pricing.currencySymbol}{pricing.source.renewal.price}</strong>
+                <span>{pricing.source.renewal.unit}</span>
+              </div>
+              <a className="button pricing-renewal-button" href={shopLinks.licenseRenewal} target="_blank" rel="noreferrer">
+                {pricing.source.renewal.cta}
+                <ArrowRight size={16} aria-hidden="true" />
+              </a>
             </div>
           </section>
         </div>
@@ -896,7 +922,7 @@ function Commercial({ content, locale }) {
             <ShoppingCart size={20} aria-hidden="true" />
             <span>
               <strong>{contact.rows.shop}</strong>
-              <small>https://dev.flyfish.group/shop/item-list</small>
+              <small>{shopUrl}</small>
             </span>
             <ArrowRight size={18} aria-hidden="true" />
           </a>

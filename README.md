@@ -57,6 +57,8 @@ The site is deployed through Cloudflare Pages. Production domains:
 Build and deploy manually:
 
 ```bash
+npm test
+npm run verify:shop
 npm run build
 npx wrangler pages deploy dist --project-name office-product-site --branch main
 ```
@@ -72,6 +74,22 @@ Custom domains should point to the Pages production domain:
 product.flyfish.group CNAME office-product-site.pages.dev
 office.flyfish.dev    CNAME office-product-site.pages.dev
 ```
+
+## Shop Catalog
+
+`src/shopCatalog.js` is the shared source of product IDs, SKU codes, deep links and CNY/USD prices for both the React page and prerendered HTML. All Office suite editions use product `1004` with an explicit `?sku=` selection:
+
+| Edition | SKU |
+| --- | --- |
+| Developer, Canvas DOCX | `29` |
+| Developer, HTML DOCXJS | `30` |
+| Commercial | `7` |
+| Enterprise | `8` |
+| Existing-license renewal | `10` |
+
+Deployment and individual-format source purchases retain their standalone product links. Excel research uses the contact section until a standalone listing is available.
+
+Before every release, `npm run verify:shop` checks the public shop API for availability, SKU identity and effective CNY/USD prices. It fails if a listing changes; review the catalog and both locales before publishing. It only reads public product data and never creates an order. No shop API request is needed to render the marketing site.
 
 ## Notes
 
